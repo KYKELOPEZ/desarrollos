@@ -18,7 +18,7 @@
                 <p:commandButton value="Registrar Seguimiento"
                                  action="#{beanSeguimiento.init()}"
                                  onclick="PF('registrar').show()"
-                                 icon="fa fa-edit"
+                                 icon="ui-icon-edit"
                                  update=":form:pgSeguimiento, :form:pgBotones"/>
 
                 <p:dataTable id="dtSeguimiento" 
@@ -80,7 +80,7 @@
                     </p:columnGroup>
 
                     <p:column style="text-align: center" exportable="false">
-                        <p:commandButton icon="fa fa-refresh"
+                        <p:commandButton icon="ui-icon-refresh"
                                          actionListener="#{beanSeguimiento.seleccionarSeguimiento(seg)}"
                                          update=":frm:growl, :form:pgSeguimiento, :form:pgBotones, :form:nmPantalla"/>
                     </p:column>
@@ -353,7 +353,7 @@
                                                    itemLabel="#{ramos.ramo}"
                                                    itemValue="#{ramos.cdRamo}"/>
                                 </p:selectOneMenu>
-                                <p:commandButton icon="fa fa-plus"
+                                <p:commandButton icon="ui-icon-plus"
                                                  actionListener="#{beanSeguimiento.seleccionarRamo()}" 
                                                  update=":form:dtRamos, :form:ramos, :frm:growl"/>
                             </h:panelGrid>
@@ -428,7 +428,7 @@
                 </h:panelGrid>
                 <h:panelGrid id="pgBotones" columns="1">
                     <p:commandButton value="Registrar" 
-                                     icon="fa fa-save"
+                                     icon="ui-icon-disk"
                                      rendered="#{beanSeguimiento.botonRegistrar}"
                                      actionListener="#{beanSeguimiento.registrarSeguimiento()}"
                                      update=":form:pgSeguimiento, :frm:dtSeguimiento, :frm:growl"/>
@@ -436,28 +436,28 @@
                     <p:commandButton  id="btnActualizar"
                                       value="Actualizar"
                                       rendered="#{beanSeguimiento.botonContacto}"
-                                      icon="fa fa-refresh"
+                                      icon="ui-icon-refresh"
                                       actionListener="#{beanSeguimiento.contacto()}"
                                       update=":form:pgSeguimiento, :frm:dtSeguimiento, :frm:growl"/>
 
                     <p:commandButton id="btnCotizacion" 
                                      value="Actualizar"
                                      rendered="#{beanSeguimiento.botonCotizado}"
-                                     icon="fa fa-refresh"
+                                     icon="ui-icon-refresh"
                                      actionListener="#{beanSeguimiento.cotizacion()}"
                                      update=":form:pgSeguimiento, :frm:dtSeguimiento, :frm:growl"/>
 
                     <p:commandButton id="btnCerrar" 
                                      value="Cerrar"
                                      rendered="#{beanSeguimiento.botonCerrar}"
-                                     icon="fa fa-remove"
+                                     icon="ui-icon-close"
                                      actionListener="#{beanSeguimiento.cerrar()}"
                                      update=":form:pgSeguimiento, :frm:dtSeguimiento, :frm:growl"/>
 
                     <p:commandButton id="btnRechazo" 
                                      value="Cerrar"
                                      rendered="#{beanSeguimiento.botonRechazo}"
-                                     icon="fa fa-remove"
+                                     icon="ui-icon-close"
                                      actionListener="#{beanSeguimiento.cerrarSegReecazo()}"
                                      update=":form:pgSeguimiento, :frm:dtSeguimiento, :frm:growl"/>
                 </h:panelGrid>
@@ -608,7 +608,7 @@
                     </tr>
                 </table>
                 <p:commandButton value="Registrar" 
-                                 icon="fa fa-save" 
+                                 icon="ui-icon-disk" 
                                  actionListener="#{beanClientes.create()}" 
                                  action="#{beanSeguimiento.registrarCliente()}"
                                  update=":form:dGrowl, :form:pgCliente, :form:pgEmail, :form:pgDireccion, :form:pgTelefonos"/>
