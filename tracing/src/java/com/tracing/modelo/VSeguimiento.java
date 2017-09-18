@@ -159,6 +159,18 @@ public class VSeguimiento implements Serializable {
     
     @Column(name = "RESULTADO")
     private String resultado;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "FC_RENOVACION")
+    private Date fcRenovacion;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "FC_RECORDATORIO")
+    private Date fcRecordatorio;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "FC_PROSPECTO")
+    private Date fcProspecto;
 
     public VSeguimiento() {
     }
@@ -409,6 +421,30 @@ public class VSeguimiento implements Serializable {
 
     public void setResultado(String resultado) {
         this.resultado = resultado;
+    }
+
+    public Date getFcRenovacion() {
+        return fcRenovacion;
+    }
+
+    public void setFcRenovacion(Date fcRenovacion) {
+        this.fcRenovacion = fcRenovacion;
+    }
+
+    public Date getFcRecordatorio() {
+        return fcRecordatorio;
+    }
+
+    public void setFcRecordatorio(Date fcRecordatorio) {
+        this.fcRecordatorio = fcRecordatorio;
+    }
+
+    public Date getFcProspecto() {
+        return fcProspecto;
+    }
+
+    public void setFcProspecto(Date fcProspecto) {
+        this.fcProspecto = fcProspecto;
     }
     
     

@@ -43,25 +43,27 @@
 
                         <p:row>
                             <p:column rowspan="2" width="30"/>
+
+                            <p:column colspan="8" headerText="CLIENTE" filterBy=""  width="1500"/>
+                            <p:column colspan="13" headerText="SEGUIMIENTO" width="2062"/>
                             <p:column rowspan="2" 
                                       width="150"
                                       headerText="ASESOR QUALITYSEG" 
                                       filterBy="#{seg.asesor}"
                                       filterMatchMode="contains"/>
-                            <p:column colspan="8" headerText="CLIENTE" filterBy=""  width="1500"/>
-                            <p:column colspan="11" headerText="SEGUIMIENTO" width="2062"/>
                         </p:row>
                         <p:row>
-                            <p:column headerText="CED/RUC" filterBy="#{seg.identificacion}"/>
                             <p:column headerText="NOMBRES" filterBy="#{seg.cliNombres}"/>
                             <p:column headerText="APELLIDOS" filterBy="#{seg.cliApellidos}"/>
+                            <p:column headerText="CED/RUC" filterBy="#{seg.identificacion}"/>
                             <p:column headerText="PROVINCIA" filterBy="#{seg.provincia}"/>
                             <p:column headerText="CIUDAD" filterBy="#{seg.ciudad}"/>
                             <p:column headerText="DIRECCION" filterBy="#{seg.direccion}"/>
                             <p:column headerText="TELEFONO" filterBy="#{seg.telefono}"/>
                             <p:column headerText="CORREO ELECTRONICO" filterBy="#{seg.correo}"/>
                             <p:column headerText="FUENTE" filterBy="#{seg.fuente}"/>
-                            <p:column headerText="FECHA DE PROSPECTO" filterBy="#{seg.fcRegistro}"/>
+                            <p:column headerText="FECHA DE REGISTRO" filterBy="#{seg.fcRegistro}"/>
+                            <p:column headerText="FECHA DE PROSPECTO" filterBy="#{seg.fcProspecto}"/>
                             <p:column headerText="ASEGURADORA" filterBy="#{seg.aseguradora}"/>
                             <p:column headerText="RAMO" filterBy="#{seg.ramo}"/>
                             <p:column headerText="PRODUCTO" filterBy="#{seg.producto}"/>
@@ -71,6 +73,9 @@
                             <p:column headerText="FECHA DE ESTADO" filterBy="#{seg.fcEstado}"/>
                             <p:column headerText="DIAS DESDE ULTIMO ESTADO" filterBy="#{seg.diasEstado}"/>
                             <p:column headerText="OBSERVACION" filterBy="#{seg.observacion}"/>
+                            <p:column headerText="FECHA DE RENOVACION" filterBy="#{seg.fcRenovacion}"/>
+                            <p:column headerText="FECHA DE PROSPECTO" filterBy="#{seg.fcProspecto}"/>
+
                         </p:row>
                     </p:columnGroup>
 
@@ -80,13 +85,8 @@
                                          update=":frm:growl, :form:pgSeguimiento, :form:pgBotones, :form:nmPantalla"/>
                     </p:column>
 
-                    <p:column headerText="ASESOR QUALITYSEG" >
-                        <p:outputLabel value="#{seg.asesor}"/>
-                    </p:column>
 
-                    <p:column headerText="CED/RUC">
-                        <p:outputLabel value="#{seg.identificacion}"/>
-                    </p:column>
+
 
                     <p:column headerText="NOMBRES" >
                         <p:outputLabel value="#{seg.cliNombres}"/>
@@ -94,6 +94,10 @@
 
                     <p:column headerText="APELLIDOS">
                         <p:outputLabel value="#{seg.cliApellidos}"/>
+                    </p:column>
+                    
+                     <p:column headerText="CED/RUC">
+                        <p:outputLabel value="#{seg.identificacion}"/>
                     </p:column>
 
                     <p:column  headerText="PROVINCIA">
@@ -122,6 +126,12 @@
                     <p:column headerText="FECHA DE REGISTRO">
                         <p:outputLabel value="#{seg.fcRegistro}" style="text-transform: uppercase">
                             <f:convertDateTime pattern="dd/MMM/yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column headerText="FECHA PROSPECTO">
+                        <p:outputLabel value="#{seg.fcProspecto}" style="text-transform: uppercase">
+                            <f:convertDateTime pattern="dd/MMM/yyy" />
                         </p:outputLabel>
                     </p:column>
 
@@ -161,15 +171,22 @@
                         <p:outputLabel value="#{seg.diasEstado}"/>
                     </p:column>
 
-                    <p:column headerText="OBSERVACION">
+                    <p:column headerText="OBSERVACION" >
                         <p:outputLabel value="#{seg.observacion}"/>
                     </p:column>
+                    <p:column headerText="FECHA RENOVACION">
+                        <p:outputLabel value="#{seg.fcRenovacion}" style="text-transform: uppercase">
+                            <f:convertDateTime pattern="dd/MMM/yyy" />
+                        </p:outputLabel>
+                    </p:column>
+                    <p:column headerText="ASESOR QUALITYSEG" >
+                        <p:outputLabel value="#{seg.asesor}"/>
+                    </p:column>
+
+
                 </p:dataTable>
 
-                <h:commandLink>
-                    <p:graphicImage value="/images/excel.png" width="25" title="Exportar a excel"/>
-                    <p:dataExporter type="xls" target="dtSeguimiento" fileName="Seguimiento" />
-                </h:commandLink>
+                
 
 
 
@@ -272,7 +289,7 @@
                         <h:panelGrid columns="2" cellspacing="10">
                             <p:outputLabel value="Resultado" />
                             <p:outputLabel value="Fecha Recordatorio" rendered="#{beanSeguimiento.fcRecordatorio}" />
-                            
+
                             <p:selectOneMenu id="resultado"
                                              autoWidth="false"
                                              filter="true"
@@ -286,7 +303,7 @@
                                                itemLabel="#{res.desResultado}"
                                                itemValue="#{res.desResultado}"/>
                             </p:selectOneMenu>
-                            
+
                             <p:calendar value="#{beanSeguimiento.seguimientoEstados.fcRecordatorio}" 
                                         mask="true"
                                         navigator="true"
@@ -385,8 +402,9 @@
                             <p:outputLabel value="Observación"/>
                             <p:inputTextarea id="RObservacion"
                                              rendered="#{beanSeguimiento.observacion}"
-                                             style="width: 98%;"
-                                             value="#{beanSeguimiento.seguimientoEstados.observacion}"/>
+                                             style="width: 98%;text-transform: uppercase"
+                                             value="#{beanSeguimiento.seguimientoEstados.observacion}"
+                                             onkeyup="javascript:this.value = this.value.toUpperCase();"/>
                             <p:selectOneMenu id="observacionCierre"
                                              panelStyle="font-size: 12px"
                                              value="#{beanSeguimiento.seguimientoEstados.observacion}"
@@ -413,7 +431,7 @@
                                      icon="fa fa-save"
                                      rendered="#{beanSeguimiento.botonRegistrar}"
                                      actionListener="#{beanSeguimiento.registrarSeguimiento()}"
-                                     update=":form:pgSeguimiento, :frm:dtSeguimiento, :frm:growl, :form:Registrar"/>
+                                     update=":form:pgSeguimiento, :frm:dtSeguimiento, :frm:growl"/>
 
                     <p:commandButton  id="btnActualizar"
                                       value="Actualizar"

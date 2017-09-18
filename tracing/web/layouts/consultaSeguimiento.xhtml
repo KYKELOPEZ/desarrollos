@@ -16,7 +16,7 @@
 
             <ui:define name="Content">
                 <p:dataTable id="dtSeguimiento" 
-                             value="#{beanSeguimiento.vistaSeguimiento}"
+                             value="#{beanConsultaSeguimiento.vistaSeguimiento}"
                              var="seg"
                              paginator="true"
                              paginatorPosition="bottom"
@@ -37,25 +37,27 @@
 
                         <p:row>
                             <p:column rowspan="2" width="30"/>
+
+                            <p:column colspan="8" headerText="CLIENTE" filterBy=""  width="1500"/>
+                            <p:column colspan="13" headerText="SEGUIMIENTO" width="2062"/>
                             <p:column rowspan="2" 
                                       width="150"
                                       headerText="ASESOR QUALITYSEG" 
                                       filterBy="#{seg.asesor}"
                                       filterMatchMode="contains"/>
-                            <p:column colspan="8" headerText="CLIENTE" filterBy=""  width="1500"/>
-                            <p:column colspan="11" headerText="SEGUIMIENTO" width="2062"/>
                         </p:row>
                         <p:row>
-                            <p:column headerText="CED/RUC" filterBy="#{seg.identificacion}"/>
                             <p:column headerText="NOMBRES" filterBy="#{seg.cliNombres}"/>
                             <p:column headerText="APELLIDOS" filterBy="#{seg.cliApellidos}"/>
+                            <p:column headerText="CED/RUC" filterBy="#{seg.identificacion}"/>
                             <p:column headerText="PROVINCIA" filterBy="#{seg.provincia}"/>
                             <p:column headerText="CIUDAD" filterBy="#{seg.ciudad}"/>
                             <p:column headerText="DIRECCION" filterBy="#{seg.direccion}"/>
                             <p:column headerText="TELEFONO" filterBy="#{seg.telefono}"/>
                             <p:column headerText="CORREO ELECTRONICO" filterBy="#{seg.correo}"/>
                             <p:column headerText="FUENTE" filterBy="#{seg.fuente}"/>
-                            <p:column headerText="FECHA DE PROSPECTO" filterBy="#{seg.fcRegistro}"/>
+                            <p:column headerText="FECHA DE REGISTRO" filterBy="#{seg.fcRegistro}"/>
+                            <p:column headerText="FECHA DE PROSPECTO" filterBy="#{seg.fcProspecto}"/>
                             <p:column headerText="ASEGURADORA" filterBy="#{seg.aseguradora}"/>
                             <p:column headerText="RAMO" filterBy="#{seg.ramo}"/>
                             <p:column headerText="PRODUCTO" filterBy="#{seg.producto}"/>
@@ -65,21 +67,14 @@
                             <p:column headerText="FECHA DE ESTADO" filterBy="#{seg.fcEstado}"/>
                             <p:column headerText="DIAS DESDE ULTIMO ESTADO" filterBy="#{seg.diasEstado}"/>
                             <p:column headerText="OBSERVACION" filterBy="#{seg.observacion}"/>
+                            <p:column headerText="FECHA DE RENOVACION" filterBy="#{seg.fcRenovacion}"/>
+                            <p:column headerText="FECHA DE PROSPECTO" filterBy="#{seg.fcProspecto}"/>
+
                         </p:row>
                     </p:columnGroup>
 
                     <p:column style="text-align: center" exportable="false">
-                        <p:commandButton icon="ui-icon-refresh"
-                                         actionListener="#{beanSeguimiento.seleccionarSeguimiento(seg)}"
-                                         />
-                    </p:column>
-
-                    <p:column headerText="ASESOR QUALITYSEG" >
-                        <p:outputLabel value="#{seg.asesor}"/>
-                    </p:column>
-
-                    <p:column headerText="CED/RUC">
-                        <p:outputLabel value="#{seg.identificacion}"/>
+                        <p:commandButton icon="fa fa-search" actionListener="#{beanConsultaSeguimiento.consultar(seg)}" update=":form:dtConsulta"/>
                     </p:column>
 
                     <p:column headerText="NOMBRES" >
@@ -89,6 +84,11 @@
                     <p:column headerText="APELLIDOS">
                         <p:outputLabel value="#{seg.cliApellidos}"/>
                     </p:column>
+                    
+                    <p:column headerText="CED/RUC">
+                        <p:outputLabel value="#{seg.identificacion}"/>
+                    </p:column>
+
 
                     <p:column  headerText="PROVINCIA">
                         <p:outputLabel value="#{seg.provincia}"/>
@@ -116,6 +116,12 @@
                     <p:column headerText="FECHA DE REGISTRO">
                         <p:outputLabel value="#{seg.fcRegistro}" style="text-transform: uppercase">
                             <f:convertDateTime pattern="dd/MMM/yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column headerText="FECHA PROSPECTO">
+                        <p:outputLabel value="#{seg.fcProspecto}" style="text-transform: uppercase">
+                            <f:convertDateTime pattern="dd/MMM/yyy" />
                         </p:outputLabel>
                     </p:column>
 
@@ -155,19 +161,65 @@
                         <p:outputLabel value="#{seg.diasEstado}"/>
                     </p:column>
 
-                    <p:column headerText="OBSERVACION">
+                    <p:column headerText="OBSERVACION" >
                         <p:outputLabel value="#{seg.observacion}"/>
                     </p:column>
-                </p:dataTable>
+                    <p:column headerText="FECHA RENOVACION">
+                        <p:outputLabel value="#{seg.fcRenovacion}" style="text-transform: uppercase">
+                            <f:convertDateTime pattern="dd/MMM/yyy" />
+                        </p:outputLabel>
+                    </p:column>                    
+                    <p:column headerText="ASESOR QUALITYSEG" >
+                        <p:outputLabel value="#{seg.asesor}"/>
+                    </p:column>
 
+                </p:dataTable>
                 <h:commandLink>
                     <p:graphicImage value="/images/excel.png" width="25" title="Exportar a excel"/>
                     <p:dataExporter type="xls" target="dtSeguimiento" fileName="Seguimiento" />
                 </h:commandLink>
-
             </ui:define>
 
         </ui:composition>
 
+        <h:form id="form" style="font-size: 12px">
+            <p:dialog id="Consulta"
+                      closeOnEscape="true"
+                      header="Historial de seguimiento"
+                      modal="true"
+                      position="top"
+                      responsive="true"
+                      showEffect="fade"
+                      widgetVar="consultar"
+                      width="700"
+                      resizable="false">
+
+                <p:dataTable id="dtConsulta" value="#{beanConsultaSeguimiento.consultaSeguimiento}" var="cons" >
+                    <p:column headerText="ESTADO">
+                        <p:outputLabel value="#{cons.cdEstado.nmEstado}"/>
+                    </p:column>
+
+                    <p:column headerText="USU. REGISTRO">
+                        <p:outputLabel value="#{cons.cdSeguimiento.usuario.nombres}  #{cons.cdSeguimiento.usuario.apellidos}"/>
+                    </p:column>
+
+                    <p:column headerText="FECHA REGISTRO">
+                        <p:outputLabel value="#{cons.fcEstado}"/>
+                    </p:column>
+
+                    <p:column headerText="OBSERVACION">
+                        <p:outputLabel value="#{cons.observacion}"/>
+                    </p:column>
+
+                    <p:column headerText="ACT." width="32" style="text-align: center">
+                        <p:selectBooleanCheckbox value="#{cons.activo}" disabled="true"/>
+                    </p:column>
+
+                </p:dataTable>
+                
+
+            </p:dialog>
+
+        </h:form>
     </body>
 </html>

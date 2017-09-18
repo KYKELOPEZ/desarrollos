@@ -108,7 +108,7 @@ public class BeanSeguimiento implements Serializable {
 
     private Boolean observacion;
     private Boolean observacionCierre;
-    
+
     private Boolean fcRecordatorio;
 
     private String nmPantalla;
@@ -207,7 +207,7 @@ public class BeanSeguimiento implements Serializable {
 
     //Guardar Seguimiento
     public void registrarSeguimiento() {
-        if (validar()) {
+//        if (validar()) {
             try {
                 //Registro tabla de seguimiento, cliente, fuente.
                 seguimientos.setCdSeguimiento(seguimientosDAO.getMaxIdDos("cdSeguimiento"));
@@ -225,7 +225,7 @@ public class BeanSeguimiento implements Serializable {
             } catch (Exception e) {
                 Mensajes.mensajeError(e.getCause().getCause().getMessage());
             }
-        }
+//        }
     }
 
     public void seleccionarSeguimiento(VSeguimiento vs) {
@@ -410,12 +410,12 @@ public class BeanSeguimiento implements Serializable {
                 listaCierre = cierreDAO.findByFk("WHERE t.cdResultado.desResultado = '" + seguimientos.getResultado() + "'");
             } else {
                 observacion = true;
-                
+
                 observacionCierre = false;
                 if (seguimientos.getResultado().equals("CONTACTO POSITIVO") || seguimientos.getResultado().equals("CONTACTO NEGATIVO")) {
-                    if(seguimientos.getResultado().equals("CONTACTO POSITIVO")){
+                    if (seguimientos.getResultado().equals("CONTACTO POSITIVO")) {
                         fcRecordatorio = false;
-                    }else{
+                    } else {
                         fcRecordatorio = true;
                     }
                     botonRegistrar = false;
@@ -424,10 +424,10 @@ public class BeanSeguimiento implements Serializable {
                     botonCerrar = false;
                     botonRechazo = false;
                 } else if (seguimientos.getResultado().equals("ENVIO COTIZACION") || seguimientos.getResultado().equals("PENDIENTE COTIZACION")) {
-                    if(seguimientos.getResultado().equals("ENVIO COTIZACION")){
+                    if (seguimientos.getResultado().equals("ENVIO COTIZACION")) {
                         fieldsetCotizacion = true;
                         fcRecordatorio = false;
-                    }else{
+                    } else {
                         fieldsetCotizacion = false;
                         fcRecordatorio = true;
                     }
@@ -458,9 +458,9 @@ public class BeanSeguimiento implements Serializable {
                 }
             }
             if (cont == 0) {
-                vistaRamos.add(ramosDAO.findById(cdRamo)); 
+                vistaRamos.add(ramosDAO.findById(cdRamo));
                 cdRamo = 0L;
-            }else{
+            } else {
                 Mensajes.mensajeError("El ramo ya se encuentra seleccionado");
             }
         } catch (Exception e) {
@@ -771,5 +771,4 @@ public class BeanSeguimiento implements Serializable {
         this.fcRecordatorio = fcRecordatorio;
     }
 
-    
 }
