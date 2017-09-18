@@ -271,7 +271,7 @@
                                 rendered="#{beanSeguimiento.fieldsetResultado}">
                         <h:panelGrid columns="2" cellspacing="10">
                             <p:outputLabel value="Resultado" />
-                            <p:outputLabel value="Fecha Recordatorio" />
+                            <p:outputLabel value="Fecha Recordatorio" rendered="#{beanSeguimiento.fcRecordatorio}" />
                             
                             <p:selectOneMenu id="resultado"
                                              autoWidth="false"
@@ -279,7 +279,7 @@
                                              value="#{beanSeguimiento.seguimientos.resultado}"
                                              panelStyle="font-size: 12px"
                                              style="width: 200px">
-                                <p:ajax listener="#{beanSeguimiento.rechazos()}" update=":form:fObservacion, pgBotones, :form:pgSeguimiento "/>
+                                <p:ajax listener="#{beanSeguimiento.rechazos()}" update=":form:fObservacion, pgBotones, :form:pgSeguimiento, :form:fResultado "/>
                                 <f:selectItem itemValue="" itemLabel="Seleccionar..!"/>
                                 <f:selectItems value="#{beanSeguimiento.listaResultados}"
                                                var="res"
@@ -291,7 +291,8 @@
                                         mask="true"
                                         navigator="true"
                                         pattern="dd/MM/yyyy"
-                                        locale="es"/>
+                                        locale="es"
+                                        rendered="#{beanSeguimiento.fcRecordatorio}"/>
                         </h:panelGrid>
                     </p:fieldset>
                     <p:fieldset id="fCotizacion" 

@@ -101,13 +101,15 @@ public class BeanSeguimiento implements Serializable {
     private Boolean botonContacto;
     private Boolean botonCotizado;
     private Boolean botonCerrar;
-    private boolean botonRechazo;
+    private Boolean botonRechazo;
     private Boolean itemsContacto;
     private Boolean itemsCotizacion;
     private Boolean itemsCierre;
 
     private Boolean observacion;
     private Boolean observacionCierre;
+    
+    private Boolean fcRecordatorio;
 
     private String nmPantalla;
 
@@ -137,6 +139,7 @@ public class BeanSeguimiento implements Serializable {
             botonCerrar = false;
             botonRechazo = false;
             observacion = true;
+            fcRecordatorio = false;
             observacionCierre = false;
             nmPantalla = "REGISTRAR";
             cdAseguradora = 0L;
@@ -245,6 +248,7 @@ public class BeanSeguimiento implements Serializable {
                     botonCerrar = false;
                     botonRechazo = false;
                     observacion = true;
+                    fcRecordatorio = false;
                     observacionCierre = false;
                     nmPantalla = "CONTACTO";
                     listaResultados = resultadoDAO.findByFk("WHERE t.proceso = 'CONTACTO'");
@@ -267,6 +271,7 @@ public class BeanSeguimiento implements Serializable {
                     botonRechazo = false;
                     observacion = true;
                     observacionCierre = false;
+                    fcRecordatorio = false;
                     nmPantalla = "COTIZACION";
                     listaResultados = resultadoDAO.findByFk("WHERE t.proceso = 'COTIZACION'");
                     RequestContext.getCurrentInstance().execute("PF('registrar').show();");
@@ -286,6 +291,7 @@ public class BeanSeguimiento implements Serializable {
                     botonCerrar = true;
                     botonRechazo = false;
                     observacion = true;
+                    fcRecordatorio = false;
                     observacionCierre = false;
                     nmPantalla = "CERRAR";
                     listaResultados = resultadoDAO.findByFk("WHERE t.proceso = 'CIERRE'");
@@ -399,19 +405,32 @@ public class BeanSeguimiento implements Serializable {
                 botonContacto = false;
                 botonCotizado = false;
                 botonCerrar = false;
+                fcRecordatorio = false;
                 botonRechazo = true;
                 listaCierre = cierreDAO.findByFk("WHERE t.cdResultado.desResultado = '" + seguimientos.getResultado() + "'");
             } else {
                 observacion = true;
-                fieldsetCotizacion = true;
+                
                 observacionCierre = false;
                 if (seguimientos.getResultado().equals("CONTACTO POSITIVO") || seguimientos.getResultado().equals("CONTACTO NEGATIVO")) {
+                    if(seguimientos.getResultado().equals("CONTACTO POSITIVO")){
+                        fcRecordatorio = false;
+                    }else{
+                        fcRecordatorio = true;
+                    }
                     botonRegistrar = false;
                     botonContacto = true;
                     botonCotizado = false;
                     botonCerrar = false;
                     botonRechazo = false;
                 } else if (seguimientos.getResultado().equals("ENVIO COTIZACION") || seguimientos.getResultado().equals("PENDIENTE COTIZACION")) {
+                    if(seguimientos.getResultado().equals("ENVIO COTIZACION")){
+                        fieldsetCotizacion = true;
+                        fcRecordatorio = false;
+                    }else{
+                        fieldsetCotizacion = false;
+                        fcRecordatorio = true;
+                    }
                     botonRegistrar = false;
                     botonContacto = false;
                     botonCotizado = true;
@@ -744,4 +763,13 @@ public class BeanSeguimiento implements Serializable {
         this.fieldsetFechaProspecto = fieldsetFechaProspecto;
     }
 
+    public Boolean getFcRecordatorio() {
+        return fcRecordatorio;
+    }
+
+    public void setFcRecordatorio(Boolean fcRecordatorio) {
+        this.fcRecordatorio = fcRecordatorio;
+    }
+
+    
 }
