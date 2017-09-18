@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Seguimiento" language="groovy" pageWidth="992" pageHeight="595" orientation="Landscape" columnWidth="952" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="13629d73-1d7e-4c52-b346-102fe314ff6b">
+	<property name="ireport.zoom" value="1.771561000000008"/>
+	<property name="ireport.x" value="303"/>
+	<property name="ireport.y" value="20"/>
+	<queryString>
+		<![CDATA[select * from v_seguimiento]]>
+	</queryString>
+	<field name="USUARIO" class="java.lang.String"/>
+	<field name="ASESOR" class="java.lang.String"/>
+	<field name="CD_CLIENTE" class="java.math.BigDecimal"/>
+	<field name="IDENTIFICACION" class="java.lang.String"/>
+	<field name="CLI_NOMBRES" class="java.lang.String"/>
+	<field name="CLI_APELLIDOS" class="java.lang.String"/>
+	<field name="CD_PROVINCIA" class="java.lang.String"/>
+	<field name="PROVINCIA" class="java.lang.String"/>
+	<field name="CD_CIUDAD" class="java.lang.String"/>
+	<field name="CIUDAD" class="java.lang.String"/>
+	<field name="CD_DIRECCION" class="java.math.BigDecimal"/>
+	<field name="DIRECCION" class="java.lang.String"/>
+	<field name="CD_SEGUIMIENTO" class="java.math.BigDecimal"/>
+	<field name="FC_REGISTRO" class="java.sql.Timestamp"/>
+	<field name="FC_COTIZACION" class="java.sql.Timestamp"/>
+	<field name="DIAS_COTIZACION" class="java.math.BigDecimal"/>
+	<field name="FC_ESTADO" class="java.sql.Timestamp"/>
+	<field name="DIAS_ESTADO" class="java.math.BigDecimal"/>
+	<field name="CD_ESTADO" class="java.math.BigDecimal"/>
+	<field name="NM_ESTADO" class="java.lang.String"/>
+	<field name="CD_RAMO" class="java.math.BigDecimal"/>
+	<field name="RAMO" class="java.lang.String"/>
+	<field name="CD_PRODUCTO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="56" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="178" height="55" uuid="0c383508-63ad-4c1f-90d7-4ecc5f30b048"/>
+				<imageExpression><![CDATA["D:\\PROGRAMACION\\desarrollo\\tracing\\web\\images\\logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="46" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="923" height="32" uuid="21ca6cbb-30b7-417a-a373-a618309bc734"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="25"/>
+				</textElement>
+				<text><![CDATA[Segumiento Clientes]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="41" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="73" height="41" backcolor="#D6DDDF" uuid="78de74aa-e1c3-43f1-9bb8-a38ea6dba880"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="73" y="0" width="422" height="20" backcolor="#D6DDDF" uuid="852183a8-217a-4bc3-83f0-56c1f1081063"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="73" y="20" width="72" height="21" backcolor="#D6DDDF" uuid="37912d46-6386-4ab1-b65d-bf4e842a8b59"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="145" y="20" width="78" height="21" backcolor="#D6DDDF" uuid="7d6579b7-5243-4a64-a416-01d140168f9f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="223" y="20" width="82" height="21" backcolor="#D6DDDF" uuid="a56af6d8-1379-4bb1-a017-7e4020c0fb3a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="305" y="20" width="60" height="21" backcolor="#D6DDDF" uuid="19aa56b4-848e-4654-83dd-a0e98c478242"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="495" y="0" width="318" height="20" backcolor="#D6DDDF" uuid="623bbb84-92e3-4930-b2a6-a81f595cf72e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="365" y="20" width="60" height="21" backcolor="#D6DDDF" uuid="2946172a-1e0b-4668-883b-6074f4650e47"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="425" y="20" width="70" height="21" backcolor="#D6DDDF" uuid="b41ae3ac-dfc7-4ffd-9443-ae5c220265f6"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="495" y="20" width="53" height="21" backcolor="#D6DDDF" uuid="f12b6089-f38b-4f9a-a5b8-40d2ac0675e9"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="548" y="20" width="53" height="21" backcolor="#D6DDDF" uuid="568626b6-6635-4114-853d-2f7950bd3939"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="601" y="20" width="53" height="21" backcolor="#D6DDDF" uuid="a5aaf51a-5f36-421e-a35e-64cec5ec63d4"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="654" y="20" width="53" height="21" backcolor="#D6DDDF" uuid="c6caa5a0-831f-40a4-87f0-198637555f10"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="707" y="20" width="53" height="21" backcolor="#D6DDDF" uuid="5e202744-39b3-4426-9f2d-37796628cb47"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="760" y="20" width="53" height="21" backcolor="#D6DDDF" uuid="41313b03-7c05-4de4-9362-25698969a9a3"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="813" y="0" width="64" height="41" backcolor="#D6DDDF" uuid="03c9f4a6-7459-4b5d-a75e-06e735537040"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="877" y="0" width="75" height="41" backcolor="#D6DDDF" uuid="251cb47d-6343-42b8-9652-e4c215c0785f"/>
+			</rectangle>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="73" height="40" uuid="207a5243-e306-4f53-bb36-97c8efab49b2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ASESOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="73" y="20" width="72" height="20" uuid="34e6bcc4-9034-49c4-9c0f-b21fccff7e8f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="145" y="20" width="78" height="20" uuid="d8745aed-eca8-40c7-bfa1-abe82191c983"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[NOMBRES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="223" y="20" width="82" height="20" uuid="3fa862b3-d4c9-4895-9f1e-7387001cd5fa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[APELLIDOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="305" y="20" width="60" height="20" uuid="31b88c1d-9b5a-4142-9781-f5f2f762eb33"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[PROVINCIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="365" y="20" width="60" height="20" uuid="2fcad824-331f-4776-abac-67b5dd83e580"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[CIUDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="425" y="20" width="70" height="20" uuid="fe117ef2-50ee-4a2e-a737-519aa6fe7ada"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[DIRECCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="495" y="20" width="53" height="20" uuid="ef385375-f63b-444d-9d1e-935db26f889f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[FECHA
+PROSPECTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="548" y="20" width="53" height="20" uuid="7d2fefef-f583-4d27-a1cd-90abe236e6de"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[FECHA
+COTIZACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="601" y="20" width="53" height="20" uuid="236f6401-ff99-4045-8784-57b9a1bf1a4e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[DIAS COTIZACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="654" y="20" width="53" height="20" uuid="462ffbf3-15ca-4f89-930c-f7dfdd278b8a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[FECHA ESTADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="707" y="20" width="53" height="20" uuid="ecdea07b-6870-48c3-b945-770f81f855bf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[DIAS
+ESTADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="760" y="20" width="53" height="20" uuid="04806d16-75ad-4ccd-9976-8eb4ce5d5468"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ESTADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="813" y="0" width="64" height="40" uuid="d52bf0f6-c010-4193-895a-52e7153c10a2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[RAMO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="877" y="0" width="75" height="40" uuid="edd09b84-2d62-4b67-a75e-06b2697d3ac1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[PRODUCTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="73" y="0" width="422" height="20" uuid="4000d868-3269-4313-bab4-d2c69dd024de"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="495" y="0" width="318" height="20" uuid="169d70dd-7025-4c72-906a-1affe6af9848"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SEGUIMIENTO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="73" height="13" uuid="b79f5bf7-f580-4f28-b4bd-b09b82f2986b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="73" y="0" width="73" height="13" uuid="88c09a27-0a11-4b45-b65a-842f242d448b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="145" y="0" width="78" height="13" uuid="8f9ce363-287a-4397-a6c5-1f89cb82c6a6"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="223" y="0" width="82" height="13" uuid="e82c88dd-8bce-4a8a-83b7-ec4449220139"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="305" y="0" width="60" height="13" uuid="f8e50417-0f15-47ac-9d7a-5f4cb7adde57"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="365" y="0" width="60" height="13" uuid="1f7ec080-a4eb-439a-8f24-c761b5651663"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="425" y="0" width="70" height="13" uuid="9751fee3-f6b6-49d9-a442-ee6f8315b19b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="495" y="0" width="53" height="13" uuid="91a61d85-81fa-49fe-85d3-ae4cfd7f700d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="548" y="0" width="53" height="13" uuid="04d7d14b-22c6-4460-b1f9-879af0b719ee"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="601" y="0" width="53" height="13" uuid="3c7441e4-7702-4ba2-9a10-35540eeb42d4"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="654" y="0" width="53" height="13" uuid="abeaa04c-7c06-40ce-82ca-698da3bdbeca"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="707" y="0" width="53" height="13" uuid="59683746-7238-42b4-adcd-0e3aa640ca7a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="760" y="0" width="53" height="13" uuid="5e08fa8e-b562-4e8e-8bf7-894559485533"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="813" y="0" width="64" height="13" uuid="288f100a-db52-4204-9f77-2083c7b4b434"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="877" y="0" width="75" height="13" uuid="2f185baf-083d-4a3f-9972-e4a8a4a14320"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="73" height="13" uuid="58319ae5-5d81-4c1e-927c-173c633572d5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ASESOR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="73" y="0" width="72" height="13" uuid="6275aca6-4723-40b3-af2d-c61acbbda303"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IDENTIFICACION}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="145" y="0" width="78" height="13" uuid="777e3487-547b-4f76-aca4-679882a3ac16"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLI_NOMBRES}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="223" y="0" width="82" height="13" uuid="8ef6e5d8-b0fa-4b52-8bc8-00523694dd13"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLI_APELLIDOS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="305" y="0" width="60" height="13" uuid="06eea4de-0adb-4565-9270-3cee583c378d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROVINCIA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="365" y="0" width="60" height="13" uuid="a4cff4d7-1bbc-4b90-b573-54b70b95555b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CIUDAD}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="425" y="0" width="70" height="13" uuid="e27c1bc9-5eb9-4f85-841d-385269ee37d7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DIRECCION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="495" y="0" width="53" height="13" uuid="45a008de-8f92-4d41-8641-a17fc0cb3733"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FC_REGISTRO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="548" y="0" width="53" height="13" uuid="60d70563-7e38-4b78-8183-7da666963ca8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FC_COTIZACION}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="601" y="0" width="53" height="13" uuid="50d57f59-8ef2-4948-b8a0-790927fe3b00"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DIAS_COTIZACION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="654" y="0" width="53" height="13" uuid="44df99f1-4c83-4f96-85f7-cb0ebeaadd57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FC_ESTADO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="707" y="0" width="53" height="13" uuid="00e6d65a-3547-4e84-afdb-78ced1c2e28f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DIAS_ESTADO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="760" y="0" width="53" height="13" uuid="77ecfb96-e5f6-4e6e-a7f4-19f855718911"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NM_ESTADO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="813" y="0" width="64" height="13" uuid="678c6026-e6bc-4441-82d4-aadb20e77960"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RAMO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="877" y="0" width="75" height="13" uuid="dee205dc-e5ed-4c5a-9ffb-648c915fdb47"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRODUCTO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

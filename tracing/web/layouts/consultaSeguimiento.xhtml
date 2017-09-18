@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../template/layout.xhtml">
+
+            <ui:define name="title">
+                Consultar
+            </ui:define>
+
+            <ui:define name="Content">
+                <p:dataTable id="dtSeguimiento" 
+                             value="#{beanSeguimiento.vistaSeguimiento}"
+                             var="seg"
+                             paginator="true"
+                             paginatorPosition="bottom"
+                             rows="8"
+                             scrollable="true"
+                             scrollWidth="100%"
+                             style="text-align: center; font-size: 12px"
+                             styleClass="tablas-generales"
+                             resizeMode="expand"                             
+                             widgetVar="dtSeguimientos"
+                             emptyMessage="Sin registros para mostrar">
+
+                    <f:facet name="header">
+                        Seguimiento clientes
+                    </f:facet>
+
+                    <p:columnGroup type="header">
+
+                        <p:row>
+                            <p:column rowspan="2" width="30"/>
+                            <p:column rowspan="2" 
+                                      width="150"
+                                      headerText="ASESOR QUALITYSEG" 
+                                      filterBy="#{seg.asesor}"
+                                      filterMatchMode="contains"/>
+                            <p:column colspan="8" headerText="CLIENTE" filterBy=""  width="1500"/>
+                            <p:column colspan="11" headerText="SEGUIMIENTO" width="2062"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="CED/RUC" filterBy="#{seg.identificacion}"/>
+                            <p:column headerText="NOMBRES" filterBy="#{seg.cliNombres}"/>
+                            <p:column headerText="APELLIDOS" filterBy="#{seg.cliApellidos}"/>
+                            <p:column headerText="PROVINCIA" filterBy="#{seg.provincia}"/>
+                            <p:column headerText="CIUDAD" filterBy="#{seg.ciudad}"/>
+                            <p:column headerText="DIRECCION" filterBy="#{seg.direccion}"/>
+                            <p:column headerText="TELEFONO" filterBy="#{seg.telefono}"/>
+                            <p:column headerText="CORREO ELECTRONICO" filterBy="#{seg.correo}"/>
+                            <p:column headerText="FUENTE" filterBy="#{seg.fuente}"/>
+                            <p:column headerText="FECHA DE PROSPECTO" filterBy="#{seg.fcRegistro}"/>
+                            <p:column headerText="ASEGURADORA" filterBy="#{seg.aseguradora}"/>
+                            <p:column headerText="RAMO" filterBy="#{seg.ramo}"/>
+                            <p:column headerText="PRODUCTO" filterBy="#{seg.producto}"/>
+                            <p:column headerText="FECHA DE COTIZACION" filterBy="#{seg.fcCotizacion}"/>
+                            <p:column headerText="DIAS DESDE LA COTIZACION" filterBy="#{seg.diasCotizacion}" />
+                            <p:column headerText="ESTADO" filterBy="#{seg.nmEstado}"/>
+                            <p:column headerText="FECHA DE ESTADO" filterBy="#{seg.fcEstado}"/>
+                            <p:column headerText="DIAS DESDE ULTIMO ESTADO" filterBy="#{seg.diasEstado}"/>
+                            <p:column headerText="OBSERVACION" filterBy="#{seg.observacion}"/>
+                        </p:row>
+                    </p:columnGroup>
+
+                    <p:column style="text-align: center" exportable="false">
+                        <p:commandButton icon="ui-icon-refresh"
+                                         actionListener="#{beanSeguimiento.seleccionarSeguimiento(seg)}"
+                                         />
+                    </p:column>
+
+                    <p:column headerText="ASESOR QUALITYSEG" >
+                        <p:outputLabel value="#{seg.asesor}"/>
+                    </p:column>
+
+                    <p:column headerText="CED/RUC">
+                        <p:outputLabel value="#{seg.identificacion}"/>
+                    </p:column>
+
+                    <p:column headerText="NOMBRES" >
+                        <p:outputLabel value="#{seg.cliNombres}"/>
+                    </p:column>
+
+                    <p:column headerText="APELLIDOS">
+                        <p:outputLabel value="#{seg.cliApellidos}"/>
+                    </p:column>
+
+                    <p:column  headerText="PROVINCIA">
+                        <p:outputLabel value="#{seg.provincia}"/>
+                    </p:column>
+                    <p:column headerText="CIUDAD">
+                        <p:outputLabel value="#{seg.ciudad}"/>
+                    </p:column>
+
+                    <p:column headerText="DIRECCION">
+                        <p:outputLabel value="#{seg.direccion}"/>
+                    </p:column>
+
+                    <p:column headerText="TELEFONOS">
+                        <p:outputLabel value="#{seg.telefono}"/>
+                    </p:column>
+
+                    <p:column headerText="CORREO ELECTRONICO">
+                        <p:outputLabel value="#{seg.correo}"/>
+                    </p:column>
+
+                    <p:column headerText="FUENTE">
+                        <p:outputLabel value="#{seg.fuente}"/>
+                    </p:column>
+
+                    <p:column headerText="FECHA DE REGISTRO">
+                        <p:outputLabel value="#{seg.fcRegistro}" style="text-transform: uppercase">
+                            <f:convertDateTime pattern="dd/MMM/yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column headerText="ASEGURADORA">
+                        <p:outputLabel value="#{seg.aseguradora}"/>
+                    </p:column>
+
+                    <p:column headerText="RAMO">
+                        <p:outputLabel value="#{seg.ramo}"/>
+                    </p:column>
+
+                    <p:column headerText="PRODUCTO">
+                        <p:outputLabel value="#{seg.producto}"/>
+                    </p:column>
+
+                    <p:column headerText="FECHA DE COTIZACION">
+                        <p:outputLabel value="#{seg.fcCotizacion}">
+                            <f:convertDateTime pattern="dd/MMM/yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column headerText="DIAS COTIZACION">
+                        <p:outputLabel value="#{seg.diasCotizacion}"/>
+                    </p:column>
+
+                    <p:column headerText="ESTADO">
+                        <p:outputLabel value="#{seg.nmEstado}"/>
+                    </p:column>
+
+                    <p:column headerText="FECHA DE ESTADO">
+                        <p:outputLabel value="#{seg.fcEstado}" style="text-transform: uppercase">
+                            <f:convertDateTime pattern="dd/MMM/yyy" />
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column headerText="DIAS ULTIMO ESTADO">
+                        <p:outputLabel value="#{seg.diasEstado}"/>
+                    </p:column>
+
+                    <p:column headerText="OBSERVACION">
+                        <p:outputLabel value="#{seg.observacion}"/>
+                    </p:column>
+                </p:dataTable>
+
+                <h:commandLink>
+                    <p:graphicImage value="/images/excel.png" width="25" title="Exportar a excel"/>
+                    <p:dataExporter type="xls" target="dtSeguimiento" fileName="Seguimiento" />
+                </h:commandLink>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

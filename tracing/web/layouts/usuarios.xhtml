@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../template/layout.xhtml">
+
+            <ui:define name="title">
+                Usuarios
+            </ui:define>
+
+            <ui:define name="Content">
+
+                <p:commandButton value="Registrar Usuario" icon="ui-icon-plus"
+                                 onclick="PF('wvRegistrar').show();"
+                                 />
+                <p:dataTable  id="dtUsuarios"
+                              styleClass="tablas-generales"
+                              style="font-size: 12px"
+                              value="#{beanUsuarios.listaUsuarios}"
+                              var="usro"        
+                              rows="13"
+                              paginator="true"
+                              paginatorPosition="bottom">
+                    <f:facet name="header">
+                        USUARIOS
+                    </f:facet>
+
+                    <p:column headerText="USUARIOS" width="30">
+                        <p:outputLabel value="#{usro.usuario}"/>
+                    </p:column>
+
+                    <p:column headerText="NOMBRES" width="100">
+                        <p:outputLabel value="#{usro.nombres}"/>
+                    </p:column>
+
+                    <p:column headerText="APELLIDOS" width="100">
+                        <p:outputLabel value="#{usro.apellidos}"/>
+                    </p:column>
+
+                    <p:column headerText="PERFIL" width="100">
+                        <p:outputLabel value="#{usro.cdPerfil.nmPerfil}"/>
+                    </p:column>
+
+                    <p:column width="32">
+                        <p:commandButton icon="ui-icon-refresh" actionListener="#{beanUsuarios.seleccion(usro)}"  title="Actualizar" update=":form:dUsuarios"/>
+                            
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{beanUsuarios.desactivar(usro)}" title="Desactivar" update=":frm:growl, :frm:dtUsuarios"/>
+                    </p:column>
+                </p:dataTable>
+            </ui:define>
+
+        </ui:composition>
+
+        <h:form id="form" style="font-size: 12px">
+            <p:dialog id="dRegUsuarios" header="Registrar Usuarios" widgetVar="wvRegistrar" modal="true" showEffect="blur" closeOnEscape="true" width="300">
+                <h:panelGrid id="pgUsuarios"
+                             columns="1" 
+                             style="margin-left: 20px; margin-top: 15px; margin-right: 20px; margin-bottom: 15px; float: left; width: 85%">
+                    <p:outputLabel for="txtNombre" value="Nombre"/>
+                    <p:inputText id="txtNombre" 
+                                 value="#{beanUsuarios.usuarios.nombres}" 
+                                 required="true" 
+                                 requiredMessage="NOMBRE: no puede ser nulo"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="txtApellido" value="Apellido"/>
+                    <p:inputText id="txtApellido" 
+                                 value="#{beanUsuarios.usuarios.apellidos}" 
+                                 required="true"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="txtUsuario"  value="Usuario"/>
+                    <p:inputText id="txtUsuario" value="#{beanUsuarios.usuarios.usuario}" 
+                                 required="true"
+                                 style="width: 100%"/>
+                    <p:outputLabel for="txtPerfil" value="Perfil"/>
+                    <p:selectOneMenu style="width: 90%" 
+                                     id="txtPerfil" 
+                                     value="#{beanUsuarios.perfiles.cdPerfil}" 
+                                     required="true"
+                                     panelStyle="font-size: 12px">
+                        <f:selectItem itemLabel="Seleccionar..!" itemValue="0"/>
+                        <f:selectItems value="#{beanUsuarios.listaPerfil}"
+                                       var="perfil"
+                                       itemLabel="#{perfil.nmPerfil}"
+                                       itemValue="#{perfil.cdPerfil}"/>
+                    </p:selectOneMenu>
+                    <p:commandButton value="Registrar" actionListener="#{beanUsuarios.grabar()}" style="width: 105%"  update=":frm:growl, :form:pgUsuarios, :frm:dtUsuarios"/>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:dialog id="dUsuarios" header="Modificar Usuarios" widgetVar="wvActualizar" modal="true" showEffect="blur" closeOnEscape="true" width="300">
+                <h:panelGrid columns="1" style="margin-left: 20px; margin-top: 15px; margin-right: 20px; margin-bottom: 15px; float: left; width: 85%">
+                    <p:outputLabel value="NOMBRES"/>
+                    <p:inputText value="#{beanUsuarios.seleccionUsuarios.nombres}" style="width: 100%"/>
+                    <p:outputLabel value="APELLIDOS"/>
+                    <p:inputText value="#{beanUsuarios.seleccionUsuarios.apellidos}" style="width: 100%"/>
+                    <p:outputLabel value="USUARIOS"/>
+                    <p:inputText value="#{beanUsuarios.seleccionUsuarios.usuario}" style="width: 100%"/>
+                    <p:outputLabel value="PERFIL"/>
+                    <p:selectOneMenu value="#{beanUsuarios.perfiles.cdPerfil}" 
+                                     style="width: 90%"
+                                     panelStyle="font-size: 12px">
+                        <f:selectItem itemLabel="Seleccionar..!" itemValue="0"/>
+                        <f:selectItems value="#{beanUsuarios.listaPerfil}"
+                                       var="perf"
+                                       itemLabel="#{perf.nmPerfil}"
+                                       itemValue="#{perf.cdPerfil}"/>
+                    </p:selectOneMenu>
+
+                    <p:commandButton actionListener="#{beanUsuarios.actualizar()}" style="width: 105%" value="Actualizar" icon="icon-refresh" update=":frm:growl, :frm:dtUsuarios"/>
+
+                </h:panelGrid>
+            </p:dialog>
+
+
+        </h:form>
+    </body>
+</html>

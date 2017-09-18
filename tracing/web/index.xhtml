@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Iniciar Sesión</title>
+        <h:outputStylesheet name="./css/login.css"/>
+    </h:head>
+    <h:body id="body">
+        <h:form id="frm">
+            <p:focus context="panel"/>
+            <p:growl id="growl" showDetail="true" life="10000"/>
+            <h:panelGrid id="panel" columns="1" cellspacing="25" style="text-align: center">
+                <p:graphicImage value="/images/logoVertical.png" style="width: 70%"/>
+                <p:inputText placeholder="Usuario" 
+                             value="#{beanIndex.usuario}" 
+                             styleClass="input"
+                             maxlength="20"
+                             required="true"
+                             requiredMessage="Para acceder ingrese su usuario.">
+                </p:inputText>
+                
+                <p:password placeholder="Clave" 
+                            value="#{beanIndex.clave}" 
+                            styleClass="input"
+                            maxlength="16"
+                            required="true"
+                            requiredMessage="Para acceder ingrese su clave"/>
+                
+                <p:commandButton value="Iniciar Sesión" styleClass="boton" actionListener="#{beanIndex.login()}" update=":frm"/>
+            </h:panelGrid>
+        </h:form>
+    </h:body>
+</html>
+

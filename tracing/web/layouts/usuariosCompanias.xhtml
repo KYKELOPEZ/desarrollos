@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../template/layout.xhtml">
+
+            <ui:define name="title">
+                Usuarios - Companias 
+            </ui:define>
+
+            <ui:define name="Content">
+                <p:commandButton value="Guardar Cambios" actionListener="#{beanUsuarioCompania.create()}"
+                                 icon="ui-icon-disk" 
+                                 style="text-align: left"
+                                 update="growl"/>
+                <table width="100%">
+                    <tr>
+                        <td valign="top">
+                            <center>
+                                <p:outputLabel value="Usuarios"/>
+                                <p:selectOneListbox value="#{beanUsuarioCompania.usuarios.usuario}" 
+                                                    style="width: 400px; text-align: left; vertical-align: top">
+                                    <p:ajax event="change" listener="#{beanUsuarioCompania.seleccionar()}" update=":frm:dtCompania"/>
+                                    <f:selectItems value="#{beanUsuarioCompania.listaUsuarios}"
+                                                   var="usro"
+                                                   itemLabel="#{usro.nombres} #{usro.apellidos} - #{usro.usuario}"
+                                                   itemValue="#{usro.usuario}"/>                                   
+                                </p:selectOneListbox>     
+                            </center>
+                            <br/>
+                            
+
+
+                        </td>
+                        <td valign="top" align="center">
+                            <p:outputLabel value="Companias"/>
+
+                            <p:panel>
+                                <p:dataTable id="dtCompania" value="#{beanUsuarioCompania.listaCompanias}" 
+                                             var="cmp" 
+                                             selection="#{beanUsuarioCompania.seleccionaCompanias}"
+                                             rowKey="#{cmp.cdCompania}"
+                                             style="margin-bottom: 0">
+                                    <p:column selectionMode="multiple" style="width: 16px;text-align: center"/>
+                                    <p:column> 
+                                        <p:outputLabel value="#{cmp.nmCompania}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panel>
+                        </td>
+                    </tr>
+                </table>
+
+
+
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

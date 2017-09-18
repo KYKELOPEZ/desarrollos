@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../template/layout.xhtml">
+
+            <ui:define name="title">
+                Ramos
+            </ui:define>
+
+            <ui:define name="Content">
+                <p:commandButton value="Registrar Ramo" icon="ui-icon-plus" onclick="PF('wvRamos').show();"/>
+                <p:dataTable id="dtRamos"
+                             styleClass="tablas-generales"
+                             style="font-size: 12px; width: 70%; margin: auto" 
+                             value="#{beanRamos.listaRamos}"
+                             var="ramo"
+                             rows="13"
+                             paginator="true"
+                             selection="#{beanRamos.listaSeleccionRamos}"
+                             rowKey="#{ramo.cdRamo}"
+                             paginatorPosition="bottom">
+                    <f:facet name="header">
+                        RAMOS
+                    </f:facet>
+
+                    <p:column selectionMode="multiple" style="width: 2px;text-align: center"/>
+                    <p:column headerText="Ramo" width="70">
+                        <p:outputLabel value="#{ramo.ramo}"/> 
+                    </p:column>
+
+                    <p:column headerText="Alias" width="32">
+                        <p:outputLabel value="#{ramo.alias}"/>
+                    </p:column>
+                    <p:column width="20" style="text-align: center">
+                        <f:facet name="header">
+                            <p:commandButton icon="ui-icon-trash" 
+                                             value="Eliminar" 
+                                             title="Eliminar Seleccion"
+                                             actionListener="#{beanRamos.eliminarSeleccion()}"
+                                             update=":frm:dtRamos, :frm:growl">
+                                <p:confirm header="Advertencia" message="Esta seguro de eliminar los registros seleccionados" icon="ui-icon-alert" />
+                            </p:commandButton>
+                            <p:confirmDialog global="true" showEffect="blur">
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                        </f:facet>
+                        <p:commandButton icon="ui-icon-refresh" 
+                                         actionListener="#{beanRamos.seleccionar(ramo)}" 
+                                         title="Actualizar"
+                                         update=":form:dActualizar"/>
+
+                        <p:commandButton icon="ui-icon-trash" 
+                                         title="Eliminar Registro"
+                                         actionListener="#{beanRamos.desactivar(ramo)}" update=":frm:dtRamos, :frm:growl"/>
+                    </p:column>
+                </p:dataTable>
+            </ui:define>
+
+        </ui:composition>
+
+        <h:form id="form" style="font-size: 12px">
+            <p:dialog id="dRamos" widgetVar="wvRamos" header="Registrar Ramos" modal="true" showEffect="blur" closeOnEscape="true" width="300">
+                <h:panelGrid columns="2" style="width: 100%">
+                    <p:outputLabel value="Ramo" />
+                    <p:inputText value="#{beanRamos.ramos.ramo}" style="width: 100%; text-transform: uppercase" onkeyup="javascript:this.value = this.value.toUpperCase();"/>
+                    <p:outputLabel value="Alias"/>
+                    <p:inputText value="#{beanRamos.ramos.alias}" style="width: 100%; text-transform: uppercase" onkeyup="javascript:this.value = this.value.toUpperCase();"/>
+                </h:panelGrid>
+                <p:commandButton value="Registrar" 
+                                 icon="ui-icon-disk" 
+                                 actionListener="#{beanRamos.create()}"
+                                 update=":frm:dtRamos, :frm:growl :form:dRamos"/>
+            </p:dialog> 
+
+            <p:dialog id="dActualizar" widgetVar="wvActualizar" header="Actualizar Ramos" modal="true" showEffect="blur" closeOnEscape="true" width="300">
+                <h:panelGrid columns="2" style="width: 100%">
+                    <p:outputLabel value="Ramo" />
+                    <p:inputText value="#{beanRamos.seleccionRamos.ramo}" style="width: 100%; text-transform: uppercase" onkeyup="javascript:this.value = this.value.toUpperCase();"/>
+                    <p:outputLabel value="Alias"/>
+                    <p:inputText value="#{beanRamos.seleccionRamos.alias}" style="width: 100%; text-transform: uppercase" onkeyup="javascript:this.value = this.value.toUpperCase();"/>
+                </h:panelGrid>
+                <p:commandButton value="Actualizar" 
+                                 icon="ui-icon-refresh" 
+                                 actionListener="#{beanRamos.update()}"
+                                 update=":frm:dtRamos, :frm:growl"/>
+            </p:dialog>
+        </h:form>
+    </body>
+</html>

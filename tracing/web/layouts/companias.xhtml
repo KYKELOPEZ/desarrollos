@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../template/layout.xhtml">
+
+            <ui:define name="title">
+                Companias
+            </ui:define>
+
+            <ui:define name="Content">
+
+                <p:commandButton value="Registrar Compania" icon="ui-icon-plus" onclick="PF('wvRegistrar').show();"/>
+
+                <p:dataTable id="dtCompania" 
+                             paginator="true"
+                             paginatorPosition="bottom"
+                             styleClass="tablas-generales"
+                             style="font-size: 12px"
+                             value="#{beanCompania.listaCompanias}"
+                             var="cmp"
+                             rows="13">
+                    <f:facet name="header">
+                        Companias
+                    </f:facet>
+
+                    <p:column headerText="COD." width="25" priority="3" style="text-align: center">
+                        <p:outputLabel value="#{cmp.cdCompania}"/>
+                    </p:column>
+
+                    <p:column headerText="NOMBRE" width="100">
+                        <p:outputLabel value="#{cmp.nmCompania}"/>
+                    </p:column>
+
+                    <p:column headerText="CIUDAD" width="50" priority="2">
+                        <p:outputLabel value="#{cmp.cdCiudad.nombre}"/>
+                    </p:column>
+
+                    <p:column width="32" style="text-align: center">
+                        <p:commandButton icon="ui-icon-refresh" actionListener="#{beanCompania.seleccion(cmp)}" update=":form:dActualizar" />
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{beanCompania.eliminar(cmp)}" update=":frm:dtCompania, :frm:growl"/>
+                    </p:column>
+
+                </p:dataTable>
+
+            </ui:define>
+
+
+
+        </ui:composition>
+
+        <h:form id="form" style="font-size: 12px">
+            <p:dialog id="dCompania" 
+                      widgetVar="wvRegistrar" 
+                      showEffect="blur" 
+                      closeOnEscape="true"
+                      modal="true"
+                      header="Registrar Compania"
+                      width="400"
+                      style="margin: auto">
+                <h:panelGrid id="pdCompania"
+                             columns="2"
+                             style="width: 80%;
+                             margin: auto">
+                    <p:outputLabel value="Nombre"/>
+                    <p:inputText id="txtCompania" value="#{beanCompania.companias.nmCompania}" style="width: 100%"/>
+                    
+                    <p:outputLabel value="Ciudad"/>
+                    <p:selectOneMenu value="#{beanCompania.ciudades.cdCiudad}"
+                                     style="width: 90%" 
+                                     panelStyle="font-size: 12px"
+                                     filter="true">
+                        <f:selectItem itemLabel="Seleccionar..!" itemValue="0"/>
+                        <f:selectItems value="#{beanCompania.listaCiudades}"
+                                       
+                                       var="ciudad"
+                                       itemLabel="#{ciudad.nombre}"
+                                       itemValue="#{ciudad.cdCiudad}"/>
+                    </p:selectOneMenu>
+                    
+                </h:panelGrid>
+                <p:commandButton value="Registrar" icon="ui-icon-disk" actionListener="#{beanCompania.create()}" update=":frm:growl, :frm:dtCompania"/>
+            </p:dialog>
+            
+            <p:dialog id="dActualizar" 
+                      widgetVar="wvActualidar"
+                      showEffect="blur" 
+                      closeOnEscape="true"
+                      modal="true"
+                      header="Actualizar Compania"
+                      width="400"
+                      style="margin: auto">
+                <h:panelGrid id="pgActualizar"
+                             columns="2"
+                             style="width: 80%;
+                             margin: auto">
+                    <p:outputLabel value="Compania:"/>
+                    <p:inputText value="#{beanCompania.companiasSeleccion.nmCompania}" style="width: 100%"/>
+                    
+                    <p:outputLabel value="Ciudad:"/>
+                    <p:selectOneMenu value="#{beanCompania.ciudades.cdCiudad}"
+                                     style="width: 90%" 
+                                     panelStyle="font-size: 12px"
+                                     filter="true">
+                        <f:selectItem itemLabel="Seleccionar..!" itemValue="0"/>
+                        <f:selectItems value="#{beanCompania.listaCiudades}"
+                                       var="ciu"
+                                       itemLabel="#{ciu.nombre}"
+                                       itemValue="#{ciu.cdCiudad}"/>
+                    </p:selectOneMenu>
+                    
+                </h:panelGrid>
+                <p:commandButton value="Actualizar" 
+                                 icon="ui-icon-refresh" 
+                                 actionListener="#{beanCompania.update()}"
+                                 update=":frm:growl"/>
+            </p:dialog>
+        </h:form>
+    </body>
+</html>

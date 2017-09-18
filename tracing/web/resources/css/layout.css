@@ -1,0 +1,35 @@
+#frm{
+    font-size: 12px;
+    
+}
+
+.logo{
+    height: 100%;
+    float: left;
+}
+
+.logOut{
+    padding-right: 30px;
+    padding-top: 10px;
+    float: right;
+}
+
+.seleccion{
+    font-size: 12px;
+}
+
+.icon-refresh{
+    background-image: url("#{FacesContext.externalContext.request.contextPath}/images/refresh.png")!important;
+}
+
+.contenido{
+    margin-top: 5px;
+    margin-left: 40px;
+    margin-right: 40px;
+    
+}
+
+.tablas-generales{
+    margin-top: 15px;
+    
+}

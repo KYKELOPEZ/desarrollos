@@ -1,0 +1,599 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../template/layout.xhtml">
+
+            <ui:define name="title">
+                Seguimiento
+            </ui:define>
+            <ui:define name="Content">
+
+                <p:commandButton value="Registrar Seguimiento"
+                                 action="#{beanSeguimiento.init()}"
+                                 onclick="PF('registrar').show()"
+                                 icon="fa fa-edit"
+                                 update=":form:pgSeguimiento, :form:pgBotones"/>
+
+                <p:dataTable id="dtSeguimiento" 
+                             value="#{beanSeguimiento.vistaSeguimiento}"
+                             var="seg"
+                             paginator="true"
+                             paginatorPosition="bottom"
+                             rows="8"
+                             scrollable="true"
+                             scrollWidth="100%"
+                             style="text-align: center; font-size: 12px"
+                             styleClass="tablas-generales"
+                             resizeMode="expand"                             
+                             widgetVar="dtSeguimientos"
+                             emptyMessage="Sin registros para mostrar">
+
+                    <f:facet name="header">
+                        Seguimiento clientes
+                    </f:facet>
+
+                    <p:columnGroup type="header">
+
+                        <p:row>
+                            <p:column rowspan="2" width="30"/>
+                            <p:column rowspan="2" 
+                                      width="150"
+                                      headerText="ASESOR QUALITYSEG" 
+                                      filterBy="#{seg.asesor}"
+                                      filterMatchMode="contains"/>
+                            <p:column colspan="8" headerText="CLIENTE" filterBy=""  width="1500"/>
+                            <p:column colspan="11" headerText="SEGUIMIENTO" width="2062"/>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="CED/RUC" filterBy="#{seg.identificacion}"/>
+                            <p:column headerText="NOMBRES" filterBy="#{seg.cliNombres}"/>
+                            <p:column headerText="APELLIDOS" filterBy="#{seg.cliApellidos}"/>
+                            <p:column headerText="PROVINCIA" filterBy="#{seg.provincia}"/>
+                            <p:column headerText="CIUDAD" filterBy="#{seg.ciudad}"/>
+                            <p:column headerText="DIRECCION" filterBy="#{seg.direccion}"/>
+                            <p:column headerText="TELEFONO" filterBy="#{seg.telefono}"/>
+                            <p:column headerText="CORREO ELECTRONICO" filterBy="#{seg.correo}"/>
+                            <p:column headerText="FUENTE" filterBy="#{seg.fuente}"/>
+                            <p:column headerText="FECHA DE PROSPECTO" filterBy="#{seg.fcRegistro}"/>
+                            <p:column headerText="ASEGURADORA" filterBy="#{seg.aseguradora}"/>
+                            <p:column headerText="RAMO" filterBy="#{seg.ramo}"/>
+                            <p:column headerText="PRODUCTO" filterBy="#{seg.producto}"/>
+                            <p:column headerText="FECHA DE COTIZACION" filterBy="#{seg.fcCotizacion}"/>
+                            <p:column headerText="DIAS DESDE LA COTIZACION" filterBy="#{seg.diasCotizacion}" />
+                            <p:column headerText="ESTADO" filterBy="#{seg.nmEstado}"/>
+                            <p:column headerText="FECHA DE ESTADO" filterBy="#{seg.fcEstado}"/>
+                            <p:column headerText="DIAS DESDE ULTIMO ESTADO" filterBy="#{seg.diasEstado}"/>
+                            <p:column headerText="OBSERVACION" filterBy="#{seg.observacion}"/>
+                        </p:row>
+                    </p:columnGroup>
+
+                    <p:column style="text-align: center" exportable="false">
+                        <p:commandButton icon="fa fa-refresh"
+                                         actionListener="#{beanSeguimiento.seleccionarSeguimiento(seg)}"
+                                         update=":frm:growl, :form:pgSeguimiento, :form:pgBotones, :form:nmPantalla"/>
+                    </p:column>
+
+                    <p:column headerText="ASESOR QUALITYSEG" >
+                        <p:outputLabel value="#{seg.asesor}"/>
+                    </p:column>
+
+                    <p:column headerText="CED/RUC">
+                        <p:outputLabel value="#{seg.identificacion}"/>
+                    </p:column>
+
+                    <p:column headerText="NOMBRES" >
+                        <p:outputLabel value="#{seg.cliNombres}"/>
+                    </p:column>
+
+                    <p:column headerText="APELLIDOS">
+                        <p:outputLabel value="#{seg.cliApellidos}"/>
+                    </p:column>
+
+                    <p:column  headerText="PROVINCIA">
+                        <p:outputLabel value="#{seg.provincia}"/>
+                    </p:column>
+                    <p:column headerText="CIUDAD">
+                        <p:outputLabel value="#{seg.ciudad}"/>
+                    </p:column>
+
+                    <p:column headerText="DIRECCION">
+                        <p:outputLabel value="#{seg.direccion}"/>
+                    </p:column>
+
+                    <p:column headerText="TELEFONOS">
+                        <p:outputLabel value="#{seg.telefono}"/>
+                    </p:column>
+
+                    <p:column headerText="CORREO ELECTRONICO">
+                        <p:outputLabel value="#{seg.correo}"/>
+                    </p:column>
+
+                    <p:column headerText="FUENTE">
+                        <p:outputLabel value="#{seg.fuente}"/>
+                    </p:column>
+
+                    <p:column headerText="FECHA DE REGISTRO">
+                        <p:outputLabel value="#{seg.fcRegistro}" style="text-transform: uppercase">
+                            <f:convertDateTime pattern="dd/MMM/yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column headerText="ASEGURADORA">
+                        <p:outputLabel value="#{seg.aseguradora}"/>
+                    </p:column>
+
+                    <p:column headerText="RAMO">
+                        <p:outputLabel value="#{seg.ramo}"/>
+                    </p:column>
+
+                    <p:column headerText="PRODUCTO">
+                        <p:outputLabel value="#{seg.producto}"/>
+                    </p:column>
+
+                    <p:column headerText="FECHA DE COTIZACION">
+                        <p:outputLabel value="#{seg.fcCotizacion}">
+                            <f:convertDateTime pattern="dd/MMM/yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column headerText="DIAS COTIZACION">
+                        <p:outputLabel value="#{seg.diasCotizacion}"/>
+                    </p:column>
+
+                    <p:column headerText="ESTADO">
+                        <p:outputLabel value="#{seg.nmEstado}"/>
+                    </p:column>
+
+                    <p:column headerText="FECHA DE ESTADO">
+                        <p:outputLabel value="#{seg.fcEstado}" style="text-transform: uppercase">
+                            <f:convertDateTime pattern="dd/MMM/yyy" />
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column headerText="DIAS ULTIMO ESTADO">
+                        <p:outputLabel value="#{seg.diasEstado}"/>
+                    </p:column>
+
+                    <p:column headerText="OBSERVACION">
+                        <p:outputLabel value="#{seg.observacion}"/>
+                    </p:column>
+                </p:dataTable>
+
+                <h:commandLink>
+                    <p:graphicImage value="/images/excel.png" width="25" title="Exportar a excel"/>
+                    <p:dataExporter type="xls" target="dtSeguimiento" fileName="Seguimiento" />
+                </h:commandLink>
+
+
+
+            </ui:define>
+
+        </ui:composition>
+
+        <h:form id="form"
+                style="font-size: 12px;">
+            <p:growl id="dGrowl" showDetail="true"/>
+            <p:dialog id="Registrar"
+                      widgetVar="registrar"
+                      width="600"
+                      minHeight="250"
+                      resizable="false"
+                      responsive="true"
+                      style="height: max-content; margin: auto;"
+                      closeOnEscape="true"
+                      onHide="#{beanSeguimiento.init()}"
+                      showEffect="blur"
+                      modal="true"
+                      position="top">
+
+                <h:panelGrid id="pgSeguimiento"
+                             style="width: 100%"
+                             columns="1"
+                             cellspacing="10">
+                    <p:outputLabel value="#{beanSeguimiento.nmPantalla}" id="nmPantalla" style="margin: auto; font-style: italic; font-weight: bold; font-size: 14px; text-decoration: underline;"/>
+                    <p:fieldset id="fFuente"
+                                rendered="#{beanSeguimiento.fieldsetFuente}"
+                                >
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="Fuente"/>
+                            <p:outputLabel value="Fecha de Prospectacion"/>
+
+                            <p:selectOneMenu id="fuente"
+                                             autoWidth="false"
+                                             value="#{beanSeguimiento.cdFuente}"
+                                             panelStyle="font-size: 12px"
+                                             style="width: 150px">
+                                <f:selectItem itemLabel="Seleccionar..!" itemValue="0"/>
+                                <f:selectItems value="#{beanSeguimiento.listaFuentes}"
+                                               var="fuente"
+                                               itemLabel="#{fuente.decFuente}"
+                                               itemValue="#{fuente.cdFuente}"/>
+                            </p:selectOneMenu>
+                            <p:calendar value="#{beanSeguimiento.seguimientos.fcProspecto}" 
+                                        navigator="true" 
+                                        locale="es"
+                                        mask="true"
+                                        pattern="dd/MM/yyyy"/>
+                        </h:panelGrid>
+                    </p:fieldset>
+
+
+
+                    <p:fieldset id="fCliente" 
+                                rendered="#{beanSeguimiento.fieldsetCliente}">
+                        <h:panelGrid id="pgCliente"
+                                     style="width: 100%"
+                                     columns="2"
+                                     cellspacing="3">
+                            <p:outputLabel value="Identificación"/>
+                            <p:columnGroup />
+
+                            <p:inputText value="#{beanSeguimiento.clientes.identificacion}"/>
+                            <p:columnGroup/>
+
+                            <p:outputLabel value="Nombres"/>
+                            <p:outputLabel value="Apellidos"/>
+
+                            <p:inputText value="#{beanSeguimiento.clientes.nombres}"/>
+                            <p:inputText value="#{beanSeguimiento.clientes.apellidos}"/>
+                        </h:panelGrid>
+
+                        <p:commandButton value="Buscar" 
+                                         icon="ui-icon-search"
+                                         actionListener="#{beanSeguimiento.buscarCliente}"
+                                         update=":form:pgCliente, :form:dtClientes, :frm:growl"/>
+                        <p:commandButton value="Cancelar" actionListener="#{beanSeguimiento.init()}"
+                                         icon="ui-icon-cancel"
+                                         update=":form:pgCliente, :form:dtClientes"/>
+                        <p:confirmDialog id="Confirmar"
+                                         widgetVar="Confirmar"
+                                         global="true"
+                                         showEffect="blur"
+                                         header="Informacion..!"
+                                         severity="information"
+                                         style="font-size: 12px"
+                                         message="No se encuentra registrado el cliente, desea registrarlo ahora?">
+                            <p:commandButton value="Sí" type="button" onclick="PF('wvRegistrar').show(); PF('Confirmar').hide();" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+
+                        </p:confirmDialog> 
+                    </p:fieldset>
+
+
+                    <p:fieldset id="fResultado"
+                                rendered="#{beanSeguimiento.fieldsetResultado}">
+                        <h:panelGrid columns="2" cellspacing="10">
+                            <p:outputLabel value="Resultado" />
+                            <p:outputLabel value="Fecha Recordatorio" />
+                            
+                            <p:selectOneMenu id="resultado"
+                                             autoWidth="false"
+                                             filter="true"
+                                             value="#{beanSeguimiento.seguimientos.resultado}"
+                                             panelStyle="font-size: 12px"
+                                             style="width: 200px">
+                                <p:ajax listener="#{beanSeguimiento.rechazos()}" update=":form:fObservacion, pgBotones, :form:pgSeguimiento "/>
+                                <f:selectItem itemValue="" itemLabel="Seleccionar..!"/>
+                                <f:selectItems value="#{beanSeguimiento.listaResultados}"
+                                               var="res"
+                                               itemLabel="#{res.desResultado}"
+                                               itemValue="#{res.desResultado}"/>
+                            </p:selectOneMenu>
+                            
+                            <p:calendar value="#{beanSeguimiento.seguimientoEstados.fcRecordatorio}" 
+                                        mask="true"
+                                        navigator="true"
+                                        pattern="dd/MM/yyyy"
+                                        locale="es"/>
+                        </h:panelGrid>
+                    </p:fieldset>
+                    <p:fieldset id="fCotizacion" 
+                                rendered="#{beanSeguimiento.fieldsetCotizacion}">
+                        <h:panelGrid columns="1" cellspacing="10" style="width: 100%">
+
+                            <p:outputLabel value="Aseguradora"/>
+                            <p:selectOneMenu value="#{beanSeguimiento.cdAseguradora}"
+                                             id="aseguradora"
+                                             autoWidth="false"
+                                             filter="true"
+                                             panelStyle="font-size: 12px"
+                                             style="width: 50%">
+                                <f:selectItem itemLabel="Seleccionar..!" itemValue="0"/>
+                                <f:selectItems value="#{beanSeguimiento.listaAseguradoras}"
+                                               var="aseg"
+                                               itemLabel="#{aseg.aseguradora}"
+                                               itemValue="#{aseg.cdAseguradora}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel value="Fecha de Cotización"/>
+                            <p:calendar id="fcCotizacion"
+                                        navigator="true"
+                                        locale="es"
+                                        mask="true"
+                                        pattern="dd/MM/yyyy"
+                                        autocomplete="true"
+                                        value="#{beanSeguimiento.seguimientos.fcCotizacion}"/>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel value="Ramo"/>
+                                <p:columnGroup/>
+                                <p:selectOneMenu value="#{beanSeguimiento.cdRamo}"
+                                                 id="ramos"
+                                                 autoWidth="false"
+                                                 filter="true"
+                                                 panelStyle="font-size: 12px"
+                                                 style="width: 250px">
+                                    <f:selectItem itemLabel="Seleccionar..!" itemValue="0"/>
+                                    <f:selectItems value="#{beanSeguimiento.listaRamos}"
+                                                   var="ramos"
+                                                   itemLabel="#{ramos.ramo}"
+                                                   itemValue="#{ramos.cdRamo}"/>
+                                </p:selectOneMenu>
+                                <p:commandButton icon="fa fa-plus"
+                                                 actionListener="#{beanSeguimiento.seleccionarRamo()}" 
+                                                 update=":form:dtRamos, :form:ramos, :frm:growl"/>
+                            </h:panelGrid>
+                            <p:dataTable id="dtRamos"
+                                         value="#{beanSeguimiento.vistaRamos}"
+                                         var="dtRamos"
+                                         scrollable="true"
+                                         scrollRows="5"
+                                         scrollHeight="100">                                
+                                <p:column headerText="RAMO">
+                                    <p:outputLabel value="#{dtRamos.ramo}"/>
+                                </p:column>
+                                <p:column width="25" style="text-align: center">
+                                    <p:commandButton icon="ui-icon-trash"
+                                                     actionListener="#{beanSeguimiento.eliminarRamo(dtRamos)}"
+                                                     update=":form:dtRamos"/>
+                                </p:column>
+                            </p:dataTable>                                         
+                        </h:panelGrid>
+                    </p:fieldset>
+
+                    <p:fieldset id="fCierre"
+                                rendered="#{beanSeguimiento.fieldsetCierre}">
+                        <h:panelGrid id="pgCierre" 
+                                     columns="1"
+                                     cellspacing="10"
+                                     style="width: 100%">
+                            <p:outputLabel value="Producto"/>
+                            <p:selectOneMenu id="producto"
+                                             value="#{beanSeguimiento.cdProducto}"
+                                             autoWidth="false"
+                                             filter="true"
+                                             panelStyle="font-size: 12px;"
+                                             style="width: 50%">
+                                <f:selectItem itemLabel="Seleccionar..!" itemValue="0"/>
+                                <f:selectItems value="#{beanSeguimiento.listaProductos}" 
+                                               var="prod"
+                                               itemLabel="#{prod.producto}"
+                                               itemValue="#{prod.cdProducto}"/>                                
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                    </p:fieldset>
+                    <p:fieldset id="fObservacion"
+                                rendered="#{beanSeguimiento.fieldsetObservacion}">
+                        <h:panelGrid columns="1" cellspacing="10" width="100%">
+                            <p:outputLabel value="Observación"/>
+                            <p:inputTextarea id="RObservacion"
+                                             rendered="#{beanSeguimiento.observacion}"
+                                             style="width: 98%;"
+                                             value="#{beanSeguimiento.seguimientoEstados.observacion}"/>
+                            <p:selectOneMenu id="observacionCierre"
+                                             panelStyle="font-size: 12px"
+                                             value="#{beanSeguimiento.seguimientoEstados.observacion}"
+                                             rendered="#{beanSeguimiento.observacionCierre}">
+                                <f:selectItem itemLabel="Seleccionar..!" itemValue=""/>
+                                <f:selectItems value="#{beanSeguimiento.listaCierre}"
+                                               var="cierre"
+                                               itemLabel="#{cierre.desCierre}"
+                                               itemValue="#{cierre.desCierre}"/>
+                            </p:selectOneMenu>
+                            <p:outputLabel value="Fecha Estimada de Renovación"
+                                           rendered="#{beanSeguimiento.observacionCierre}"/>
+                            <p:calendar navigator="true" 
+                                        mask="true" 
+                                        pattern="dd/MM/yyyy" 
+                                        value="#{beanSeguimiento.seguimientos.fcRenovacion}"
+                                        locale="es"
+                                        rendered="#{beanSeguimiento.observacionCierre}"/>
+                        </h:panelGrid>
+                    </p:fieldset>
+                </h:panelGrid>
+                <h:panelGrid id="pgBotones" columns="1">
+                    <p:commandButton value="Registrar" 
+                                     icon="fa fa-save"
+                                     rendered="#{beanSeguimiento.botonRegistrar}"
+                                     actionListener="#{beanSeguimiento.registrarSeguimiento()}"
+                                     update=":form:pgSeguimiento, :frm:dtSeguimiento, :frm:growl, :form:Registrar"/>
+
+                    <p:commandButton  id="btnActualizar"
+                                      value="Actualizar"
+                                      rendered="#{beanSeguimiento.botonContacto}"
+                                      icon="fa fa-refresh"
+                                      actionListener="#{beanSeguimiento.contacto()}"
+                                      update=":form:pgSeguimiento, :frm:dtSeguimiento, :frm:growl"/>
+
+                    <p:commandButton id="btnCotizacion" 
+                                     value="Actualizar"
+                                     rendered="#{beanSeguimiento.botonCotizado}"
+                                     icon="fa fa-refresh"
+                                     actionListener="#{beanSeguimiento.cotizacion()}"
+                                     update=":form:pgSeguimiento, :frm:dtSeguimiento, :frm:growl"/>
+
+                    <p:commandButton id="btnCerrar" 
+                                     value="Cerrar"
+                                     rendered="#{beanSeguimiento.botonCerrar}"
+                                     icon="fa fa-remove"
+                                     actionListener="#{beanSeguimiento.cerrar()}"
+                                     update=":form:pgSeguimiento, :frm:dtSeguimiento, :frm:growl"/>
+
+                    <p:commandButton id="btnRechazo" 
+                                     value="Cerrar"
+                                     rendered="#{beanSeguimiento.botonRechazo}"
+                                     icon="fa fa-remove"
+                                     actionListener="#{beanSeguimiento.cerrarSegReecazo()}"
+                                     update=":form:pgSeguimiento, :frm:dtSeguimiento, :frm:growl"/>
+                </h:panelGrid>
+            </p:dialog>
+
+            <p:dialog id="Clientes"
+                      widgetVar="clientes"
+                      width="600"
+                      height="430"
+                      closeOnEscape="true"
+                      showEffect="blur"
+                      modal="true">
+                <p:dataTable id="dtClientes"
+                             value="#{beanSeguimiento.listaClientes}"
+                             var="cli"
+                             selectionMode="single"
+                             rowKey="#{cli.cdCliente}">
+                    <f:facet name="header">
+                        Clientes
+                    </f:facet>
+                    <p:ajax event="rowSelect" listener="#{beanSeguimiento.seleccionarCliente}" update=":form:pgCliente"/>
+                    <p:column headerText="IDENTIFICACIÓN" width="20">
+                        <p:outputLabel value="#{cli.identificacion}"/>
+                    </p:column>
+                    <p:column headerText="NOMBRES" width="40">
+                        <p:outputLabel value="#{cli.nombres}"/>
+                    </p:column>
+                    <p:column headerText="APELLIDOS" width="40">
+                        <p:outputLabel value="#{cli.apellidos}"/>
+                    </p:column>
+                </p:dataTable>
+
+            </p:dialog>
+
+
+            <p:dialog header="Registrar Cliente"
+                      id="dCliente" 
+                      widgetVar="wvRegistrar" 
+                      showEffect="blur" 
+                      closeOnEscape="true" 
+                      modal="true"
+                      >
+                <table cellspacing="10">
+                    <tr>
+                        <td valign="top">
+                            <p:fieldset legend="Datos Personales" style="width: 250px">
+                                <h:panelGrid id="pgRCliente" 
+                                             columns="1" 
+                                             cellpadding="3"
+                                             width="100%">
+                                    <p:outputLabel value="Nombres"/>
+                                    <p:inputText value="#{beanClientes.clientes.nombres}" style="width: 100%" />
+
+                                    <p:outputLabel value="Apellidos"/>
+                                    <p:inputText value="#{beanClientes.clientes.apellidos}" style="width: 100%"/>
+
+                                    <p:outputLabel value="Tipo de identificación"/>
+                                    <p:selectOneMenu value="#{beanClientes.clientes.tpIdentificacion}" 
+                                                     style="width: 90%"
+                                                     panelStyle="font-size: 12px">
+                                        <p:ajax listener="#{beanClientes.longitudIdentificacion()}" update="txtIdentificacion"/>
+                                        <f:selectItem itemLabel="CEDULA" itemValue="CEDULA"/>
+                                        <f:selectItem itemLabel="RUC" itemValue="RUC"/>                    
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Identificación"/>
+                                    <p:inputMask id="txtIdentificacion"
+                                                 mask="#{beanClientes.tpIdentificacion}"
+                                                 style="width: 100%"
+                                                 value="#{beanClientes.clientes.identificacion}"/>
+
+
+                                </h:panelGrid>
+                            </p:fieldset>
+
+                            <p:fieldset legend="Email">
+                                <h:panelGrid id="pgEmail" 
+                                             columns="1"
+                                             cellpadding="3"
+                                             style="width: 250px">
+                                    <p:outputLabel value="Email 1"/>
+                                    <p:inputText id="txtEmail" 
+                                                 style="width: 100%"
+                                                 value="#{beanClientes.email}"/>
+                                    <p:outputLabel value="Email 2"/>
+                                    <p:inputText id="txtEmailDos" 
+                                                 style="width: 100%"
+                                                 value="#{beanClientes.emailDos}"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </td>
+                        <td valign="top">
+                            <p:fieldset legend="Dirección">
+                                <h:panelGrid id="pgDireccion"
+                                             columns="1" 
+                                             cellpadding="3"
+                                             style="width: 250px">
+                                    <p:outputLabel value="Provincia"/>
+                                    <p:selectOneMenu value="#{beanClientes.codigoProvincia}"
+                                                     style="width: 90%"
+                                                     panelStyle="font-size: 12px">
+                                        <p:ajax listener="#{beanClientes.find()}" update="somCiudades"/>
+                                        <f:selectItem itemLabel="Seleccionar..!" itemValue="0"/>
+                                        <f:selectItems value="#{beanClientes.listaProvincias}"
+                                                       var="pro"
+                                                       itemLabel="#{pro.provincia}"
+                                                       itemValue="#{pro.cdProvincia}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Ciudad"/>
+                                    <p:selectOneMenu value="#{beanClientes.codigoCiudades}" 
+                                                     id="somCiudades" 
+                                                     style="width: 90%"
+                                                     panelStyle="font-size: 12px">
+                                        <f:selectItem itemLabel="Seleccionar..!" itemValue="0"/>
+                                        <f:selectItems value="#{beanClientes.listaCiudades}"
+                                                       var="ciu"
+                                                       itemLabel="#{ciu.nombre}"
+                                                       itemValue="#{ciu.cdCiudad}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Dirección"/>
+                                    <p:inputText value="#{beanClientes.direcciones.direccion}" style="width: 100%"/>
+
+                                    <p:outputLabel value="Referencia"/>
+                                    <p:inputText value="#{beanClientes.direcciones.referencia}" style="width: 100%"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                            <p:fieldset legend="Teléfonos" >
+                                <h:panelGrid id="pgTelefonos" 
+                                             columns="1"
+                                             style="width: 250px"
+                                             cellpadding="3">
+                                    <p:outputLabel value="Convencional"/>
+                                    <p:inputMask id="txtConvencional" 
+                                                 value="#{beanClientes.convencional}"
+                                                 mask="99-999-9999" 
+                                                 style="width: 100%"/>
+
+                                    <p:outputLabel value="Celular"/>
+                                    <p:inputMask id="txtCelular" 
+                                                 value="#{beanClientes.celular}"
+                                                 mask="999-999-9999" 
+                                                 style="width: 100%"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </td>
+                    </tr>
+                </table>
+                <p:commandButton value="Registrar" 
+                                 icon="fa fa-save" 
+                                 actionListener="#{beanClientes.create()}" 
+                                 action="#{beanSeguimiento.registrarCliente()}"
+                                 update=":form:dGrowl, :form:pgCliente, :form:pgEmail, :form:pgDireccion, :form:pgTelefonos"/>
+            </p:dialog>
+        </h:form>
+    </body>
+</html>

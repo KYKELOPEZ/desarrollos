@@ -1,0 +1,182 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../template/layout.xhtml">
+
+            <ui:define name="title">
+                Clientes
+            </ui:define>
+
+            <ui:define name="Content">
+                <p:commandButton value="Registrar Cliente" icon="ui-icon-plus" onclick="PF('wvRegistrar').show();"/>
+                <p:dataTable id="dtClientes"
+                             value="#{beanClientes.listaClientes}"
+                             var="cli"
+                             paginator="true"
+                             paginatorPosition="bottom"
+                             rows="12"
+                             styleClass="tablas-generales"
+                             style="font-size: 12px">
+                    <f:facet name="header">
+                        Clientes
+                    </f:facet>
+
+                    
+                    <p:column headerText="NOMBRES" width="25" filterBy="#{cli.nombres}">
+                        <p:outputLabel value="#{cli.nombres}"/>
+                    </p:column>
+
+                    <p:column headerText="APELLIDOS" width="25" filterBy="#{cli.apellidos}">
+                        <p:outputLabel value="#{cli.apellidos}"/>
+                    </p:column>
+
+                    <p:column headerText="TIPO DE CLIENTE" width="14">
+                        <p:outputLabel value="#{cli.tpCliente}"/>
+                    </p:column>
+
+                    <p:column headerText="TIPO IDENTIFICACION" width="14">
+                        <p:outputLabel value="#{cli.tpIdentificacion}"/>
+                    </p:column>
+
+                    <p:column headerText="IDENTIFICACION" width="14">
+                        <p:outputLabel value="#{cli.identificacion}"/>
+                    </p:column>
+                    <p:column width="5">
+                        <p:commandButton icon="ui-icon-refresh" title="Actualizar"/>
+                        <p:commandButton icon="ui-icon-refresh" title="Eliminar"/>
+                    </p:column>
+                </p:dataTable>
+            </ui:define>
+
+        </ui:composition>
+        <h:form id="form" style="font-size: 12px">
+            <p:growl id="dGrowl" showDetail="true" sticky="true"/>
+            <p:dialog header="Registrar Cliente"
+                      id="dCliente" 
+                      widgetVar="wvRegistrar" 
+                      showEffect="blur" 
+                      closeOnEscape="true" 
+                      modal="true"
+                      >
+                <table cellspacing="10">
+                    <tr>
+                        <td valign="top">
+                            <p:fieldset legend="Datos Personales" style="width: 250px">
+                                <h:panelGrid id="pgCliente" 
+                                             columns="1" 
+                                             cellpadding="3"
+                                             width="100%">
+                                    <p:outputLabel value="Nombres"/>
+                                    <p:inputText value="#{beanClientes.clientes.nombres}" style="width: 100%" />
+
+                                    <p:outputLabel value="Apellidos"/>
+                                    <p:inputText value="#{beanClientes.clientes.apellidos}" style="width: 100%"/>
+
+                                    <p:outputLabel value="Tipo de identificacion"/>
+                                    <p:selectOneMenu value="#{beanClientes.clientes.tpIdentificacion}" 
+                                                     style="width: 90%"
+                                                     panelStyle="font-size: 12px">
+                                        <p:ajax listener="#{beanClientes.longitudIdentificacion()}" update="txtIdentificacion"/>
+                                        <f:selectItem itemLabel="CEDULA" itemValue="CEDULA"/>
+                                        <f:selectItem itemLabel="RUC" itemValue="RUC"/>                    
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Identificacion"/>
+                                    <p:inputMask id="txtIdentificacion"
+                                                 mask="#{beanClientes.tpIdentificacion}"
+                                                 style="width: 100%"
+                                                 value="#{beanClientes.clientes.identificacion}"/>
+
+
+                                </h:panelGrid>
+                            </p:fieldset>
+                            
+                            <p:fieldset legend="Email">
+                                <h:panelGrid id="pgEmail" 
+                                             columns="1"
+                                             cellpadding="3"
+                                             style="width: 250px">
+                                    <p:outputLabel value="Email 1"/>
+                                    <p:inputText id="txtEmail" 
+                                                 style="width: 100%"
+                                                 value="#{beanClientes.email}"/>
+                                    <p:outputLabel value="Email 2"/>
+                                    <p:inputText id="txtEmailDos" 
+                                                 style="width: 100%"
+                                                 value="#{beanClientes.emailDos}"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </td>
+                        <td valign="top">
+                            <p:fieldset legend="Direccion">
+                                <h:panelGrid id="pgDireccion"
+                                             columns="1" 
+                                             cellpadding="3"
+                                             style="width: 250px">
+                                    <p:outputLabel value="Provincia"/>
+                                    <p:selectOneMenu value="#{beanClientes.codigoProvincia}"
+                                                     style="width: 90%"
+                                                     panelStyle="font-size: 12px">
+                                        <p:ajax listener="#{beanClientes.find()}" update="somCiudades"/>
+                                        <f:selectItem itemLabel="Seleccionar" itemValue="0"/>
+                                        <f:selectItems value="#{beanClientes.listaProvincias}"
+                                                       var="pro"
+                                                       itemLabel="#{pro.provincia}"
+                                                       itemValue="#{pro.cdProvincia}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Ciudad"/>
+                                    <p:selectOneMenu value="#{beanClientes.codigoCiudades}" 
+                                                     id="somCiudades" 
+                                                     style="width: 90%"
+                                                     panelStyle="font-size: 12px">
+                                        <f:selectItem itemLabel="Seleccionar" itemValue="0"/>
+                                        <f:selectItems value="#{beanClientes.listaCiudades}"
+                                                       var="ciu"
+                                                       itemLabel="#{ciu.nombre}"
+                                                       itemValue="#{ciu.cdCiudad}"/>
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel value="Direccion"/>
+                                    <p:inputText value="#{beanClientes.direcciones.direccion}" style="width: 100%"/>
+
+                                    <p:outputLabel value="Referencia"/>
+                                    <p:inputText value="#{beanClientes.direcciones.referencia}" style="width: 100%"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                            <p:fieldset legend="Telefonos" >
+                                <h:panelGrid id="pgTelefonos" 
+                                             columns="1"
+                                             style="width: 250px"
+                                             cellpadding="3">
+                                    <p:outputLabel value="Convencional"/>
+                                    <p:inputMask id="txtConvencional" 
+                                                 value="#{beanClientes.convencional}"
+                                                 mask="99-999-9999" 
+                                                 style="width: 100%"/>
+
+                                    <p:outputLabel value="Celular"/>
+                                    <p:inputMask id="txtCelular" 
+                                                 value="#{beanClientes.celular}"
+                                                 mask="999-999-9999" 
+                                                 style="width: 100%"/>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </td>
+                    </tr>
+                </table>
+                <p:commandButton value="Registrar" 
+                                 icon="ui-icon-disk" 
+                                 actionListener="#{beanClientes.create()}" 
+                                 update=":form:dGrowl, :form:pgCliente, :form:pgEmail, :form:pgDireccion, :form:pgTelefonos"/>
+            </p:dialog>
+        </h:form>
+    </body>
+</html>
