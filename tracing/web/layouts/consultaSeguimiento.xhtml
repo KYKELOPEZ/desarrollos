@@ -204,7 +204,9 @@
                     </p:column>
 
                     <p:column headerText="FECHA REGISTRO">
-                        <p:outputLabel value="#{cons.fcEstado}"/>
+                        <p:outputLabel value="#{cons.fcEstado}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </p:outputLabel>
                     </p:column>
 
                     <p:column headerText="OBSERVACION">
