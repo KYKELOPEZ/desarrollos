@@ -287,7 +287,7 @@ public class BeanClientes implements Bean, Serializable {
             RequestContext.getCurrentInstance().execute("PF('wvRegistrar').hide();");
             Mensajes.mensajeGrabarCorrecto();
         } catch (Exception e) {
-            Mensajes.mensajeError(e.getLocalizedMessage());
+            Mensajes.mensajeError(e.getCause().getLocalizedMessage());
             Mensajes.mensajeGrabarNoCorrecto();
         }
     }
