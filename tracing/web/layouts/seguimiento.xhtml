@@ -18,7 +18,7 @@
                 <p:commandButton value="Registrar Seguimiento"
                                  action="#{beanSeguimiento.init()}"
                                  onclick="PF('registrar').show()"
-                                 icon="ui-icon-edit"
+                                 icon="ui-icon-plus"
                                  update=":form:pgSeguimiento, :form:pgBotones"/>
 
                 <p:dataTable id="dtSeguimiento" 
@@ -42,7 +42,7 @@
                     <p:columnGroup type="header">
 
                         <p:row>
-                            <p:column rowspan="2" width="30"/>
+                            <p:column rowspan="2" width="80"/>
 
                             <p:column colspan="8" headerText="CLIENTE" filterBy=""  width="1500"/>
                             <p:column colspan="13" headerText="SEGUIMIENTO" width="2062"/>
@@ -80,9 +80,17 @@
                     </p:columnGroup>
 
                     <p:column style="text-align: center" exportable="false">
-                        <p:commandButton icon="ui-icon-refresh"
-                                         actionListener="#{beanSeguimiento.seleccionarSeguimiento(seg)}"
-                                         update=":frm:growl, :form:pgSeguimiento, :form:pgBotones, :form:nmPantalla"/>
+                        
+                            <p:commandButton icon="ui-icon-refresh"
+                                             actionListener="#{beanSeguimiento.seleccionarSeguimiento(seg)}"
+                                             title="Actualizar"
+                                             update=":frm:growl, :form:pgSeguimiento, :form:pgBotones, :form:nmPantalla"/>  
+                            <p:outputLabel value="   "/>
+                            <p:commandButton icon="ui-icon-search" 
+                                             actionListener="#{beanConsultaSeguimiento.consultar(seg)}" 
+                                             title="Consultar"
+                                             update=":form:dtConsulta"/>
+                        
                     </p:column>
 
 
@@ -95,8 +103,8 @@
                     <p:column headerText="APELLIDOS">
                         <p:outputLabel value="#{seg.cliApellidos}"/>
                     </p:column>
-                    
-                     <p:column headerText="CED/RUC">
+
+                    <p:column headerText="CED/RUC">
                         <p:outputLabel value="#{seg.identificacion}"/>
                     </p:column>
 
@@ -186,7 +194,7 @@
 
                 </p:dataTable>
 
-                
+
 
 
 
@@ -612,6 +620,43 @@
                                  actionListener="#{beanClientes.create()}" 
                                  action="#{beanSeguimiento.registrarCliente()}"
                                  update=":form:dGrowl, :form:pgCliente, :form:pgEmail, :form:pgDireccion, :form:pgTelefonos"/>
+            </p:dialog>
+
+            <p:dialog id="Consulta"
+                      closeOnEscape="true"
+                      header="Historial de seguimiento"
+                      modal="true"
+                      position="top"
+                      responsive="true"
+                      showEffect="fade"
+                      widgetVar="consultar"
+                      width="700"
+                      resizable="false">
+
+                <p:dataTable id="dtConsulta" value="#{beanConsultaSeguimiento.consultaSeguimiento}" var="cons" >
+                    <p:column headerText="ESTADO">
+                        <p:outputLabel value="#{cons.cdEstado.nmEstado}"/>
+                    </p:column>
+
+                    <p:column headerText="USU. REGISTRO">
+                        <p:outputLabel value="#{cons.cdSeguimiento.usuario.nombres}  #{cons.cdSeguimiento.usuario.apellidos}"/>
+                    </p:column>
+
+                    <p:column headerText="FECHA REGISTRO">
+                        <p:outputLabel value="#{cons.fcEstado}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </p:outputLabel>
+                    </p:column>
+
+                    <p:column headerText="OBSERVACION">
+                        <p:outputLabel value="#{cons.observacion}"/>
+                    </p:column>
+
+                    <p:column headerText="ACT." width="32" style="text-align: center">
+                        <p:selectBooleanCheckbox value="#{cons.activo}" disabled="true"/>
+                    </p:column>
+
+                </p:dataTable>
             </p:dialog>
         </h:form>
     </body>
