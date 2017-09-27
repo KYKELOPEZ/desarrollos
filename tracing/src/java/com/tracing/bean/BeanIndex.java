@@ -8,6 +8,7 @@ package com.tracing.bean;
 import com.tracing.dao.UsuariosDAO;
 import com.tracing.modelo.Usuarios;
 import com.tracing.util.Mensajes;
+import com.tracing.util.Variables;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;

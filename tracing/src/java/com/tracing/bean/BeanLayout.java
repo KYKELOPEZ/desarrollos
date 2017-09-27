@@ -10,6 +10,8 @@ import com.tracing.dao.MenuPerfilDAO;
 import com.tracing.modelo.Menu;
 import com.tracing.modelo.MenuPerfil;
 import com.tracing.modelo.Usuarios;
+import com.tracing.util.Variables;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,13 +50,25 @@ public class BeanLayout implements Serializable {
     private List<Menu> listaMenu;
     private List<Menu> listamPerfil;
 
+    private Boolean menuAdm;
+
     @PostConstruct
     public void init() {
-        modelo = new DefaultMenuModel();
         usuarios = (Usuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-        findAll();
-        listamPerfil = new ArrayList<Menu>();
         acceso();
+    }
+
+    public void verificarSession() {
+        try {
+            FacesContext context = FacesContext.getCurrentInstance();
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+
+            Usuarios us = (Usuarios) context.getExternalContext().getSessionMap().get("usuario");
+            if (us == null) {
+                ec.redirect(ec.getRequestContextPath());
+            }
+        } catch (IOException e) {
+        }
     }
 
     public void logout() {
@@ -68,48 +82,53 @@ public class BeanLayout implements Serializable {
     }
 
     public void acceso() {
-        try {
-            for (MenuPerfil mp : listaMenuPerfil) {
-                listamPerfil.add(mp.getCdMenu());
-            }
-            for (Menu m : listaMenu) {
-                for (Menu mp : listamPerfil) {
-                    if (mp.getCdMenu() == m.getCdMenu()) {
-                        if (m.getNivel() == 1) {
-                            DefaultSubMenu firstSubmenu = new DefaultSubMenu(m.getDescripcion());
-                            firstSubmenu.setIcon(m.getIcono());
-                            for (Menu i : listamPerfil) {
-                                Menu submenu = i.getMenCdMenu();
-                                if (submenu != null) {
-                                    if (submenu.getCdMenu() == m.getCdMenu()) {
-                                        DefaultMenuItem item = new DefaultMenuItem(i.getDescripcion());
-                                        item.setUrl(i.getUrl());
-                                        item.setIcon(i.getIcono());
-                                        firstSubmenu.addElement(item);
-                                    }
-                                }
-                            }
-                            modelo.addElement(firstSubmenu);
-                        } else if (m.getNivel() == 0) {
-                            DefaultMenuItem item = new DefaultMenuItem(m.getDescripcion());
-                            item.setIcon(m.getIcono());
-                            item.setUrl(m.getUrl());
-                            modelo.addElement(item);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
+        if (usuarios.getCdPerfil().getNmPerfil().equals("ADMINISTRADOR")) {
+            menuAdm = true;
+        } else {
+            menuAdm = false;
         }
+//        try {
+//            for (MenuPerfil mp : listaMenuPerfil) {
+//                listamPerfil.add(mp.getCdMenu());
+//            }
+//            for (Menu m : listaMenu) {
+//                for (Menu mp : listamPerfil) {
+//                    if (mp.getCdMenu() == m.getCdMenu()) {
+//                        if (m.getNivel() == 1) {
+//                            DefaultSubMenu firstSubmenu = new DefaultSubMenu(m.getDescripcion());
+//                            firstSubmenu.setIcon(m.getIcono());
+//                            for (Menu i : listamPerfil) {
+//                                Menu submenu = i.getMenCdMenu();
+//                                if (submenu != null) {
+//                                    if (submenu.getCdMenu() == m.getCdMenu()) {
+//                                        DefaultMenuItem item = new DefaultMenuItem(i.getDescripcion());
+//                                        item.setUrl(i.getUrl());
+//                                        item.setIcon(i.getIcono());
+//                                        firstSubmenu.addElement(item);
+//                                    }
+//                                }
+//                            }
+//                            modelo.addElement(firstSubmenu);
+//                        } else if (m.getNivel() == 0) {
+//                            DefaultMenuItem item = new DefaultMenuItem(m.getDescripcion());
+//                            item.setIcon(m.getIcono());
+//                            item.setUrl(m.getUrl());
+//                            modelo.addElement(item);
+//                        }
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//        }
     }
 
     public void findAll() {
-        try {
-            listaMenu = menuDAO.findByFk("where t.estado = 1 order by t.orden");
-            listaMenuPerfil = menuPerfilDAO.findByFk("WHERE t.cdPerfil.cdPerfil = " + usuarios.getCdPerfil().getCdPerfil() + " order by t.cdMenu.orden");
-        } catch (Exception e) {
-
-        }
+//        try {
+//            listaMenu = menuDAO.findByFk("where t.estado = 1 order by t.orden");
+//            listaMenuPerfil = menuPerfilDAO.findByFk("WHERE t.cdPerfil.cdPerfil = " + usuarios.getCdPerfil().getCdPerfil() + " order by t.cdMenu.orden");
+//        } catch (Exception e) {
+//
+//        }
 
     }
 
@@ -127,6 +146,14 @@ public class BeanLayout implements Serializable {
 
     public void setModelo(MenuModel modelo) {
         this.modelo = modelo;
+    }
+
+    public Boolean getMenuAdm() {
+        return menuAdm;
+    }
+
+    public void setMenuAdm(Boolean menuAdm) {
+        this.menuAdm = menuAdm;
     }
 
 }
