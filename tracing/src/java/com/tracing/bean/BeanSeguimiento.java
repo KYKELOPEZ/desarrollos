@@ -1,5 +1,6 @@
 package com.tracing.bean;
 
+import com.oracle.jrockit.jfr.Producer;
 import com.tracing.dao.AseguradorasDAO;
 import com.tracing.dao.CierreDAO;
 import com.tracing.dao.ClientesDAO;
@@ -17,6 +18,7 @@ import com.tracing.modelo.Clientes;
 import com.tracing.modelo.Fuente;
 import com.tracing.modelo.Productos;
 import com.tracing.modelo.Ramos;
+import com.tracing.modelo.RamosProd;
 import com.tracing.modelo.Resultado;
 import com.tracing.modelo.SeguimientoEstados;
 import com.tracing.modelo.Seguimientos;
@@ -24,7 +26,12 @@ import com.tracing.modelo.Usuarios;
 import com.tracing.modelo.VSeguimiento;
 import com.tracing.util.Mensajes;
 import java.io.Serializable;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -72,6 +79,7 @@ public class BeanSeguimiento implements Serializable {
     private Long cdAseguradora;
 
     private List<Productos> listaProductos;
+    private List<Productos> vistaProductos;
     @EJB(beanName = "ProductosDAOImpl")
     private ProductosDAO productosDAO;
     private Long cdProducto;
@@ -102,6 +110,7 @@ public class BeanSeguimiento implements Serializable {
     private Boolean botonCotizado;
     private Boolean botonCerrar;
     private Boolean botonRechazo;
+    private Boolean botonSeguimiento;
     private Boolean itemsContacto;
     private Boolean itemsCotizacion;
     private Boolean itemsCierre;
@@ -110,21 +119,27 @@ public class BeanSeguimiento implements Serializable {
     private Boolean observacionCierre;
 
     private Boolean fcRecordatorio;
-
+    private String proceso;
     private String nmPantalla;
+    String mensaje;
+
+    private List<RamosProd> ramosProd;
+    private RamosProd ramoProducto;
+
+    private Date fechaActual = new Date();
 
     //al abrir la pantalla seguimiento cliente
     @PostConstruct
     public void init() {
         try {
             usuarios = (Usuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-            vistaSeguimiento = vSeguimientoDAO.findByFk("WHERE t.nmEstado NOT LIKE '%CERRADO%' ORDER BY t.fcRegistro desc");
+            vistaSeguimiento = vSeguimientoDAO.findByFk("WHERE t.nmEstado NOT LIKE '%CERRADO%' AND t.usuario = '" + usuarios.getUsuario() + "' ORDER BY t.fcRegistro desc");
             clientes = new Clientes();
             listaFuentes = fuenteDAO.findByFk("WHERE t.estado  = 1 order by t.decFuente");
             seguimientoEstados = new SeguimientoEstados();
             seguimientos = new Seguimientos();
             listaAseguradoras = aseguradorasDAO.findByFk("WHERE t.estado = 1");
-            vistaRamos = new ArrayList<>();
+            ramosProd = new ArrayList<>();
             listaRamos = ramosDAO.findByFk("WHERE t.estado = 1");
             fieldsetCliente = true;
             fieldsetFuente = true;
@@ -138,6 +153,7 @@ public class BeanSeguimiento implements Serializable {
             botonCotizado = false;
             botonCerrar = false;
             botonRechazo = false;
+            botonSeguimiento = false;
             observacion = true;
             fcRecordatorio = false;
             observacionCierre = false;
@@ -146,6 +162,7 @@ public class BeanSeguimiento implements Serializable {
             cdFuente = 0L;
             cdRamo = 0L;
             cdProducto = 0L;
+            ramoProducto = new RamosProd();
         } catch (Exception e) {
             Mensajes.mensajeError(e.getCause().getCause().getMessage());
         }
@@ -154,9 +171,24 @@ public class BeanSeguimiento implements Serializable {
     //consulta cliente
     public void buscarCliente() {
         try {
-            listaClientes = clientesDAO.findByFk("WHERE t.identificacion LIKE '%" + clientes.getIdentificacion() + "%' "
-                    + "AND t.nombres LIKE '%" + clientes.getNombres().toUpperCase() + "%' "
-                    + "AND t.apellidos LIKE '%" + clientes.getApellidos().toUpperCase() + "%'");
+            String query = "";
+            
+            if(!clientes.getIdentificacion().equals("")){
+                query = "WHERE t.identificacion LIKE '%" + clientes.getIdentificacion() + "' "
+                    + "AND trim(t.nombres) LIKE trim('%" + clientes.getNombres().toUpperCase() + "') "
+                    + "AND trim(t.apellidos) LIKE trim('%" + clientes.getApellidos().toUpperCase() + "')";
+            }else{
+                query = "WHERE (t.identificacion LIKE '%" + clientes.getIdentificacion() + "' "
+                    + "OR t.identificacion is null) "
+                    + "AND trim(t.nombres) LIKE trim('%" + clientes.getNombres().toUpperCase() + "') "
+                    + "AND trim(t.apellidos) LIKE trim('%" + clientes.getApellidos().toUpperCase() + "')";
+            }
+                
+            listaClientes = clientesDAO.findByFk(query);
+//            listaClientes = clientesDAO.findByFk("WHERE (t.identificacion LIKE '%" + clientes.getIdentificacion() + "' "
+//                    + "OR t.identificacion is null) "
+//                    + "AND trim(t.nombres) LIKE trim('%" + clientes.getNombres().toUpperCase() + "') "
+//                    + "AND trim(t.apellidos) LIKE trim('%" + clientes.getApellidos().toUpperCase() + "')");
 
             if (listaClientes.isEmpty()) {
                 RequestContext.getCurrentInstance().execute("PF('Confirmar').show();");
@@ -184,7 +216,7 @@ public class BeanSeguimiento implements Serializable {
 
     public void clienteSeguimiento(Clientes cli) {
         VSeguimiento cliS;
-        String mensaje;
+
         cliSeguimiento = vSeguimientoDAO.findByFk("WHERE t.nmEstado NOT LIKE '%CERRADO%' AND t.cdCliente = " + cli.getCdCliente() + "");
         if (cliSeguimiento.size() == 1) {
             cliS = cliSeguimiento.get(0);
@@ -193,24 +225,27 @@ public class BeanSeguimiento implements Serializable {
                 mensaje = mensaje + " en el ramo " + cliS.getRamo();
             }
             mensaje = mensaje + " para mayor informacion verificar la tabla de seguimiento.";
-            Mensajes.mensajeInformacion(mensaje);
+            //Mensajes.mensajeInformacion(mensaje);
+            RequestContext.getCurrentInstance().execute("PF('mensaje').show();");
         } else if (cliSeguimiento.size() > 1) {
-            mensaje = "EL cliente " + cli.getNombres() + " " + cli.getApellidos() + " mantiene seguimientos pendientes en los ramos";
+            mensaje = "EL cliente " + cli.getNombres() + " " + cli.getApellidos() + " mantiene seguimientos pendientes en los ramos: <br><br>";
             for (VSeguimiento cliSeg : cliSeguimiento) {
-                mensaje = mensaje + " " + cliSeg.getRamo() + " ";
+                mensaje = mensaje + " * " + cliSeg.getRamo() + ".<br>";
             }
-            mensaje = mensaje + "para mayor informacion verificar la tabla de seguimiento.";
-            Mensajes.mensajeInformacion(mensaje);
+            mensaje = mensaje + "<br>Para mayor informacion ir a consulta de seguimientos.";
+            //Mensajes.mensajeInformacion(mensaje);
+            RequestContext.getCurrentInstance().execute("PF('mensaje').show();");
         }
-
     }
 
     //Guardar Seguimiento
     public void registrarSeguimiento() {
-//        if (validar()) {
+        proceso = "REGISTRO";
+        if (validar()) {
             try {
                 //Registro tabla de seguimiento, cliente, fuente.
                 seguimientos.setCdSeguimiento(seguimientosDAO.getMaxIdDos("cdSeguimiento"));
+                seguimientos.setCdSegOrigen(seguimientos.getCdSeguimiento().intValue());
                 seguimientos.setCdCliete(clientes);
                 seguimientos.setCdFuente(fuenteDAO.findById(cdFuente));
                 seguimientos.setUsuario(usuarios);
@@ -218,22 +253,24 @@ public class BeanSeguimiento implements Serializable {
                 //Registro de estado del seguimiento, observacion.
                 seguimientoEstados.setCdSegest(seguimientoEstadosDAO.getMaxIdDos("cdSegest"));
                 seguimientoEstados.setCdSeguimiento(seguimientos);
-                seguimientoEstados.setCdEstado(segEstadosDAO.findByFk("WHERE t.nmEstado = 'REGISTRADO - PROSPECTADO'").get(0));
+                seguimientoEstados.setCdEstado(segEstadosDAO.findByFk("WHERE t.nmEstado = 'REGISTRADO'").get(0));
                 seguimientoEstadosDAO.create(seguimientoEstados);
                 Mensajes.mensajeGrabarCorrecto();
                 init();
             } catch (Exception e) {
                 Mensajes.mensajeError(e.getCause().getCause().getMessage());
             }
-//        }
+        }
     }
 
     public void seleccionarSeguimiento(VSeguimiento vs) {
-        seguimientos = seguimientosDAO.findById(vs.getCdSeguimiento());
+        Long val = vs.getCdSeguimiento();
+        seguimientos = new Seguimientos();
+        seguimientos = seguimientosDAO.findById(val);
         try {
             if (seguimientos.getUsuario().getUsuario().equals(usuarios.getUsuario()) || usuarios.getUsuario().equals("CLOPEZ")) {
                 //SEGUIMIENTO CONTACTO 
-                if (vs.getNmEstado().equals("REGISTRADO - PROSPECTADO") || vs.getNmEstado().equals("CONTACTADO - PENDIENTE") && vs.getResultado().equals("CONTACTO NEGATIVO")) {
+                if (vs.getNmEstado().equals("REGISTRADO") || vs.getNmEstado().equals("CONTACTADO") && vs.getResultado().equals("CONTACTO PENDIENTE")) {
                     seguimientos.setResultado("");
                     fieldsetCliente = false;
                     fieldsetFechaProspecto = false;
@@ -248,14 +285,14 @@ public class BeanSeguimiento implements Serializable {
                     botonCerrar = false;
                     botonRechazo = false;
                     observacion = true;
-                    fcRecordatorio = false;
+                    fcRecordatorio = true;
                     observacionCierre = false;
                     nmPantalla = "CONTACTO";
                     listaResultados = resultadoDAO.findByFk("WHERE t.proceso = 'CONTACTO'");
                     RequestContext.getCurrentInstance().execute("PF('registrar').show();");
                     //SEGUIMIENTO COTIZADO
-                } else if ((vs.getNmEstado().equals("CONTACTADO - PENDIENTE") && vs.getResultado().equals("CONTACTO POSITIVO"))
-                        || vs.getNmEstado().equals("COTIZADO - PENDIENTE") && vs.getResultado().equals("PENDIENTE COTIZACION")) {
+                } else if ((vs.getNmEstado().equals("CONTACTADO") && vs.getResultado().equals("CONTACTADO"))
+                        || vs.getNmEstado().equals("COTIZADO") && vs.getResultado().equals("PENDIENTE COTIZACION")) {
                     seguimientos.setResultado("");
                     fieldsetCliente = false;
                     fieldsetFechaProspecto = false;
@@ -271,12 +308,35 @@ public class BeanSeguimiento implements Serializable {
                     botonRechazo = false;
                     observacion = true;
                     observacionCierre = false;
-                    fcRecordatorio = false;
+                    fcRecordatorio = true;
                     nmPantalla = "COTIZACION";
                     listaResultados = resultadoDAO.findByFk("WHERE t.proceso = 'COTIZACION'");
                     RequestContext.getCurrentInstance().execute("PF('registrar').show();");
                     //SEGUIMIENTO CIERRE
-                } else if (vs.getNmEstado().equals("COTIZADO - PENDIENTE") && vs.getResultado().equals("ENVIO COTIZACION")) {
+                } else if ((vs.getNmEstado().equals("COTIZADO") && vs.getResultado().equals("ENVIO COTIZACION"))
+                        || (vs.getNmEstado().equals("SEGUIMIENTO") && (vs.getResultado().equals("EN GESTION") || vs.getResultado().equals("PENDIENTE")))) {
+                    seguimientos.setResultado("");
+                    fieldsetCliente = false;
+                    fieldsetFechaProspecto = false;
+                    fieldsetFuente = false;
+                    fieldsetResultado = true;
+                    fieldsetCotizacion = false;
+                    fieldsetObservacion = true;
+                    fieldsetCierre = false;
+                    botonRegistrar = false;
+                    botonContacto = false;
+                    botonCotizado = false;
+                    botonCerrar = false;
+                    botonRechazo = false;
+                    observacion = true;
+                    fcRecordatorio = true;
+                    observacionCierre = false;
+                    botonSeguimiento = true;
+                    nmPantalla = "SEGUIMIENTO";
+                    listaResultados = resultadoDAO.findByFk("WHERE t.proceso = 'SEGUIMIENTO'");
+                    RequestContext.getCurrentInstance().execute("PF('registrar').show();");
+                } else if (vs.getNmEstado().equals("SEGUIMIENTO") && vs.getResultado().equals("CONCRETADO")) {
+
                     seguimientos.setResultado("");
                     fieldsetCliente = false;
                     fieldsetFechaProspecto = false;
@@ -293,9 +353,8 @@ public class BeanSeguimiento implements Serializable {
                     observacion = true;
                     fcRecordatorio = false;
                     observacionCierre = false;
-                    nmPantalla = "CERRAR";
+                    nmPantalla = "CIERRE";
                     listaResultados = resultadoDAO.findByFk("WHERE t.proceso = 'CIERRE'");
-                    listaProductos = productosDAO.findByFk("WHERE t.cdRamo.cdRamo = " + vs.getCdRamo());
                     RequestContext.getCurrentInstance().execute("PF('registrar').show();");
                 } else {
                     Mensajes.mensajeError("RESULTADO INCORRECTO.");
@@ -309,13 +368,18 @@ public class BeanSeguimiento implements Serializable {
 
     }
 
+    public void productoPorRamo() {
+        listaProductos = productosDAO.findByFk("where t.cdRamo.cdRamo = " + cdRamo + " order by t.producto ");
+    }
+
     public void contacto() {
+        proceso = "CONTACTO";
         if (validar()) {
             try {
                 seguimientosDAO.update(seguimientos);
                 seguimientoEstados.setCdSegest(seguimientoEstadosDAO.getMaxIdDos("cdSegest"));
                 seguimientoEstados.setCdSeguimiento(seguimientos);
-                seguimientoEstados.setCdEstado(segEstadosDAO.findByFk("WHERE t.nmEstado = 'CONTACTADO - PENDIENTE'").get(0));
+                seguimientoEstados.setCdEstado(segEstadosDAO.findByFk("WHERE t.nmEstado = 'CONTACTADO'").get(0));
                 seguimientoEstadosDAO.create(seguimientoEstados);
                 Mensajes.mensajeGrabarCorrecto();
                 init();
@@ -327,30 +391,86 @@ public class BeanSeguimiento implements Serializable {
     }
 
     public void cotizacion() {
+        proceso = "COTIZACION";
         if (validar()) {
             try {
-
                 seguimientos.setCdAseguradora(aseguradorasDAO.findById(cdAseguradora));
-                if (!vistaRamos.isEmpty()) {
-                    seguimientos.setCdRamo(vistaRamos.get(0));
+                if (!ramosProd.isEmpty()) {
+                    seguimientos.setCdRamo(ramosProd.get(0).getCdRamo());
+                    if (ramosProd.get(0).getCdProducto() != null) {
+                        seguimientos.setCdProducto(ramosProd.get(0).getCdProducto());
+                    }
                 }
                 seguimientosDAO.update(seguimientos);
                 seguimientoEstados.setCdSegest(seguimientoEstadosDAO.getMaxIdDos("cdSegest"));
                 seguimientoEstados.setCdSeguimiento(seguimientos);
-                seguimientoEstados.setCdEstado(segEstadosDAO.findByFk("WHERE t.nmEstado = 'COTIZADO - PENDIENTE'").get(0));
+                seguimientoEstados.setCdEstado(segEstadosDAO.findByFk("WHERE t.nmEstado = 'COTIZADO'").get(0));
                 seguimientoEstadosDAO.create(seguimientoEstados);
-                if (vistaRamos.size() > 1) {
-                    for (Ramos r : vistaRamos) {
-                        if (!seguimientos.getCdRamo().getRamo().equals(r.getRamo())) {
-                            seguimientos.setCdSeguimiento(seguimientosDAO.getMaxIdDos("cdSeguimiento"));
-                            seguimientos.setCdRamo(r);
-                            seguimientosDAO.create(seguimientos);
-                            seguimientoEstados.setCdSegest(seguimientoEstadosDAO.getMaxIdDos("cdSegest"));
-                            seguimientoEstados.setCdSeguimiento(seguimientos);
-                            seguimientoEstados.setCdEstado(segEstadosDAO.findByFk("WHERE t.nmEstado = 'COTIZADO - PENDIENTE'").get(0));
-                            seguimientoEstadosDAO.create(seguimientoEstados);
+                if (ramosProd.size() > 1) {
+                    for (int i = 1; i < ramosProd.size(); i++) {
+                        seguimientos.setCdSeguimiento(seguimientosDAO.getMaxIdDos("cdSeguimiento"));
+                        seguimientos.setCdRamo(ramosProd.get(i).getCdRamo());
+                        if (ramosProd.get(i).getCdProducto() != null) {
+                            seguimientos.setCdProducto(ramosProd.get(i).getCdProducto());
+                        } else {
+                            seguimientos.setCdProducto(null);
                         }
+                        seguimientosDAO.create(seguimientos);
+//                        seguimientoEstados.setCdSegest(seguimientoEstadosDAO.getMaxIdDos("cdSegest"));
+//                        seguimientoEstados.setCdSeguimiento(seguimientos);
+//                        seguimientoEstados.setCdEstado(segEstadosDAO.findByFk("WHERE t.nmEstado = 'COTIZADO - PENDIENTE'").get(0));
+//                        seguimientoEstadosDAO.create(seguimientoEstados);
                     }
+                    //LLAMAR A PROCEDIMIENTO PARA COPIAR HISTORIAL DE SEGUIMIENTO
+                    Connection cn = null;
+                    try {
+                        DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+                        //cn = DriverManager.getConnection("jdbc:oracle:thin:@130.130.130.124:1521:efiquality", "seguimiento", "seguimiento");
+                        cn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "seguimiento", "seguimiento");
+                        cn.setAutoCommit(false);
+
+                        CallableStatement cst = cn.prepareCall("{call sp_copia_seguimiento_ramo(?)}");
+                        cst.setInt(1, seguimientos.getCdSegOrigen());
+                        cst.executeUpdate();
+
+                    } catch (SQLException ex) {
+                        cn.rollback();
+                    }
+
+                }
+                Mensajes.mensajeGrabarCorrecto();
+                init();
+                RequestContext.getCurrentInstance().execute("PF('registrar').hide();");
+            } catch (Exception e) {
+                Mensajes.mensajeError(e.getMessage());
+            }
+        }
+    }
+
+    public void seguimiento() {
+        proceso = "SEGUIMIENTO";
+        if (validar()) {
+            try {
+                seguimientosDAO.update(seguimientos);
+                seguimientoEstados.setCdSegest(seguimientoEstadosDAO.getMaxIdDos("cdSegest"));
+                seguimientoEstados.setCdSeguimiento(seguimientos);
+                seguimientoEstados.setCdEstado(segEstadosDAO.findByFk("WHERE t.nmEstado = 'SEGUIMIENTO'").get(0));
+                seguimientoEstadosDAO.create(seguimientoEstados);
+
+                Connection cn = null;
+                try {
+                    DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+                    //cn = DriverManager.getConnection("jdbc:oracle:thin:@130.130.130.124:1521:efiquality", "seguimiento", "seguimiento");
+                    cn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "seguimiento", "seguimiento");
+                    cn.setAutoCommit(false);
+
+                    CallableStatement cst = cn.prepareCall("{call sp_copia_est_seg_activo(?,?)}");
+                    cst.setInt(1, seguimientos.getCdSegOrigen());
+                    cst.setInt(2, seguimientos.getCdSeguimiento().intValue());
+                    cst.executeUpdate();
+
+                } catch (SQLException ex) {
+                    cn.rollback();
                 }
                 Mensajes.mensajeGrabarCorrecto();
                 init();
@@ -362,6 +482,7 @@ public class BeanSeguimiento implements Serializable {
     }
 
     public void cerrar() {
+        proceso = "CIERRE";
         if (validar()) {
             seguimientosDAO.update(seguimientos);
             seguimientoEstados.setCdSegest(seguimientoEstadosDAO.getMaxIdDos("cdSegest"));
@@ -375,6 +496,7 @@ public class BeanSeguimiento implements Serializable {
     }
 
     public void cerrarSegReecazo() {
+        proceso = "RECHAZO";
         if (validar()) {
             seguimientosDAO.update(seguimientos);
             seguimientoEstados.setCdSegest(seguimientoEstadosDAO.getMaxIdDos("cdSegest"));
@@ -412,24 +534,21 @@ public class BeanSeguimiento implements Serializable {
                 observacion = true;
 
                 observacionCierre = false;
-                if (seguimientos.getResultado().equals("CONTACTO POSITIVO") || seguimientos.getResultado().equals("CONTACTO NEGATIVO")) {
-                    if (seguimientos.getResultado().equals("CONTACTO POSITIVO")) {
-                        fcRecordatorio = false;
-                    } else {
-                        fcRecordatorio = true;
-                    }
+                if (seguimientos.getResultado().equals("CONTACTADO") || seguimientos.getResultado().equals("CONTACTO PENDIENTE")) {
                     botonRegistrar = false;
+                    
                     botonContacto = true;
                     botonCotizado = false;
                     botonCerrar = false;
                     botonRechazo = false;
+                    fcRecordatorio = true;
                 } else if (seguimientos.getResultado().equals("ENVIO COTIZACION") || seguimientos.getResultado().equals("PENDIENTE COTIZACION")) {
                     if (seguimientos.getResultado().equals("ENVIO COTIZACION")) {
                         fieldsetCotizacion = true;
-                        fcRecordatorio = false;
+                        
                     } else {
                         fieldsetCotizacion = false;
-                        fcRecordatorio = true;
+                        
                     }
                     botonRegistrar = false;
                     botonContacto = false;
@@ -468,25 +587,119 @@ public class BeanSeguimiento implements Serializable {
         }
     }
 
-    public void eliminarRamo(Ramos ramo) {
+    public void selecccionarRamoProd() {
         try {
-            vistaRamos.remove(ramo);
+            if(cdRamo != 0L){
+            int cont = 0;
+            for (RamosProd p : ramosProd) {
+                if (cdProducto == 0L) {
+                    if (p.getCdRamo().getCdRamo() == cdRamo && p.getCdProducto() == null) {
+                        cont = cont + 1;
+                    }
+                } else if (p.getCdProducto() != null) {
+                    if (p.getCdRamo().getCdRamo() == cdRamo && p.getCdProducto().getCdProducto() == cdProducto) {
+                        cont = cont + 1;
+                    }
+                }
+            }
+            if (cont == 0) {
+                ramoProducto.setCdRamo(ramosDAO.findById(cdRamo));
+                if (cdProducto != 0L) {
+                    ramoProducto.setCdProducto(productosDAO.findById(cdProducto));
+                }
+                ramosProd.add(ramoProducto);
+                cdProducto = 0L;
+                cdRamo = 0L;
+                ramoProducto = new RamosProd();
+                
+            } else {
+                Mensajes.mensajeError("El ramo con el producto seleccionado ya se encuentra registrado");
+            }
+            }else{
+                Mensajes.mensajeError("Para añadir debe seleccionar un ramo");
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public void eliminarRamo(RamosProd ramProd) {
+        try {
+            ramosProd.remove(ramProd);
         } catch (Exception e) {
             Mensajes.mensajeError(e.getCause().getCause().getMessage());
         }
-
     }
 
     public void registrarCliente() {
         clientes = clientesDAO.findById(clientesDAO.getMaxIdDos("cdCliente") - 1L);
+        RequestContext.getCurrentInstance().execute("PF('wvRegistrar').hide();");
     }
 
     public Boolean validar() {
         Boolean validacion = true;
+
+        if (proceso.equals("REGISTRO")) {
+            if (cdFuente == 0) {
+                Mensajes.mensajeError("Seleccione la fuente del cliente para continuar.");
+                return false;
+            }
+            if (seguimientos.getFcProspecto() == null) {
+                Mensajes.mensajeError("Ingrese fecha de prospectacion del cliente.");
+                return false;
+            }
+
+        } else if (proceso.equals("CONTACTO")) {
+            if (seguimientos.getResultado().equals("")) {
+                Mensajes.mensajeError("Seleccione el resultado del contacto.");
+                return false;
+            }
+        } else if (proceso.equals("COTIZACION")) {
+            if (seguimientos.getResultado().equals("")) {
+                Mensajes.mensajeError("Seleccione el resultado del contacto.");
+                return false;
+            }
+            if (!seguimientos.getResultado().equals("PENDIENTE COTIZACION")) {
+                if (seguimientos.getFcCotizacion() == null) {
+                    Mensajes.mensajeError("Ingrese fecha de cotizacion.");
+                    return false;
+                }
+
+                if (ramosProd.isEmpty()) {
+                    Mensajes.mensajeError("Para registrar agrege al menos un ramo.");
+                    return false;
+                }
+            }
+        } else if (proceso.equals("SEGUIMIENTO")) {
+            if (seguimientos.getResultado().equals("")) {
+                Mensajes.mensajeError("Seleccione el resultado del contacto.");
+                return false;
+            }
+        }else if (proceso.equals("CIERRE")){
+            if (seguimientos.getResultado().equals("")) {
+                Mensajes.mensajeError("Seleccione el resultado del contacto.");
+                return false;
+            }
+        }else if(proceso.equals("RECHAZO")){
+            if (seguimientos.getResultado().equals("")) {
+                Mensajes.mensajeError("Seleccione el resultado del contacto.");
+                return false;
+            }
+            
+            if(cdAseguradora == 0L){
+                Mensajes.mensajeError("Seleccione una compania de seguros.");
+                return false;
+            }
+            
+            if(seguimientoEstados.getDetalleCierre().equals("")){
+                Mensajes.mensajeError("Ingrese un detalle de cierre.");
+                return false;
+            }
+        }
         if (seguimientoEstados.getObservacion().equals("")) {
             Mensajes.mensajeError("Para continuar ingrese una observacion.");
             return false;
         }
+
         return validacion;
     }
 
@@ -769,6 +982,58 @@ public class BeanSeguimiento implements Serializable {
 
     public void setFcRecordatorio(Boolean fcRecordatorio) {
         this.fcRecordatorio = fcRecordatorio;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+
+    public String getProceso() {
+        return proceso;
+    }
+
+    public void setProceso(String proceso) {
+        this.proceso = proceso;
+    }
+
+    public List<Productos> getVistaProductos() {
+        return vistaProductos;
+    }
+
+    public void setVistaProductos(List<Productos> vistaProductos) {
+        this.vistaProductos = vistaProductos;
+    }
+
+    public List<RamosProd> getRamosProd() {
+        return ramosProd;
+    }
+
+    public void setRamosProd(List<RamosProd> ramosProd) {
+        this.ramosProd = ramosProd;
+    }
+
+    public Date getFechaActual() {
+        return fechaActual;
+    }
+
+    public Boolean getBotonRechazo() {
+        return botonRechazo;
+    }
+
+    public void setBotonRechazo(Boolean botonRechazo) {
+        this.botonRechazo = botonRechazo;
+    }
+
+    public Boolean getBotonSeguimiento() {
+        return botonSeguimiento;
+    }
+
+    public void setBotonSeguimiento(Boolean botonSeguimiento) {
+        this.botonSeguimiento = botonSeguimiento;
     }
 
 }

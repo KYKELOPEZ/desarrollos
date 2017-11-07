@@ -7,7 +7,10 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <h:head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
         <h:outputStylesheet name="./css/layout.css"/>
         <title><ui:insert name="title">Facelets Template</ui:insert></title>
         <f:event type="preRenderView" listener="#{beanLayout.verificarSession()}"/>
@@ -15,7 +18,7 @@
     </h:head>
 
     <h:body>
-        <h:form id="frm" style="font-size: 12px" >
+        <h:form id="frm" style="font-size: 11px" >
             <p:growl id="growl" showDetail="true" life="10000"/>
 
             <p:layout fullPage="true">
@@ -41,7 +44,7 @@
                         <p:outputLabel value="#{beanLayout.usuarios.nombres} #{beanLayout.usuarios.apellidos}" />
                     </p:panel>
                     <p:separator/>
-                    <p:panelMenu style="width:300px">
+                    <p:panelMenu style="width:192px">
                         <p:submenu label="REGISTRO" >
                             <p:menuitem value="Seguimiento" url="seguimiento.jsf"/>
                             <p:menuitem value="Clientes" url="clientes.jsf"/>
@@ -57,7 +60,7 @@
                             <p:menuitem value="Companias" url="companias.jsf"/>
                         </p:submenu>                        
                     </p:panelMenu>
-                        
+
                 </p:layoutUnit>
 
                 <p:layoutUnit position="center">

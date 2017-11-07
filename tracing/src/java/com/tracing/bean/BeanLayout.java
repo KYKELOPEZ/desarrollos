@@ -54,8 +54,12 @@ public class BeanLayout implements Serializable {
 
     @PostConstruct
     public void init() {
-        usuarios = (Usuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
-        acceso();
+        try {
+            usuarios = (Usuarios) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuario");
+            acceso();
+        } catch (Exception e) {
+            
+        }
     }
 
     public void verificarSession() {

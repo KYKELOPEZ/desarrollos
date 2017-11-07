@@ -65,6 +65,9 @@ public class Seguimientos implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "FC_PROSPECTO")
     private Date fcProspecto;
+    
+    @Column(name = "CD_SEG_ORIGEN")
+    private int cdSegOrigen;
 
     public Long getCdSeguimiento() {
         return cdSeguimiento;
@@ -160,5 +163,13 @@ public class Seguimientos implements Serializable {
 
     public void setFcProspecto(Date fcProspecto) {
         this.fcProspecto = fcProspecto;
+    }
+
+    public int getCdSegOrigen() {
+        return cdSegOrigen;
+    }
+
+    public void setCdSegOrigen(int cdSegOrigen) {
+        this.cdSegOrigen = cdSegOrigen;
     }
 }

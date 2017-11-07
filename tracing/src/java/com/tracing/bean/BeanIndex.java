@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -39,21 +40,33 @@ public class BeanIndex implements Serializable {
 
     public void login() {
         String pantalla = "";
-        
+
         if (usuariosDAO.findByFk("where t.usuario = '" + usuario.toUpperCase() + "' and t.clave = '" + clave.toUpperCase() + "'").size() > 0) {
-            try{
-            usuarios = usuariosDAO.findByFk("where t.usuario = '" + usuario.toUpperCase() + "' and t.clave = '" + clave.toUpperCase() + "'").get(0);
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", usuarios);
-            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-            ec.redirect(ec.getRequestContextPath() + "/layouts/inicio.xhtml");
-            }catch(Exception e){
-                
+            try {
+                usuarios = usuariosDAO.findByFk("where t.usuario = '" + usuario.toUpperCase() + "' and t.clave = '" + clave.toUpperCase() + "'").get(0);
+                if (usuarios.getUsuario().equals(usuarios.getClave())) {
+                    RequestContext.getCurrentInstance().execute("PF('cambioClave').show();");
+                } else {
+                    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", usuarios);
+                    ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                    ec.redirect(ec.getRequestContextPath() + "/layouts/inicio.xhtml");
+                }
+            } catch (Exception e) {
+
             }
+
         } else {
             Mensajes.mensajeError("Usuario y/o Contraseña incorrectos");
-            
+
         }
 
+    }
+    
+    public void cambioClave(){
+        usuarios.setClave(usuarios.getClave().toUpperCase());
+        usuariosDAO.update(usuarios);
+        Mensajes.mensajeGrabarCorrecto();
+        RequestContext.getCurrentInstance().execute("PF('cambioClave').hide();");
     }
 
     public Usuarios getUsuarios() {

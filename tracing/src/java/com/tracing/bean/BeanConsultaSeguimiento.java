@@ -32,6 +32,7 @@ public class BeanConsultaSeguimiento implements Bean, Serializable {
     public void init() {
         cancel();
         findAll();
+
     }
 
     @Override
@@ -51,12 +52,12 @@ public class BeanConsultaSeguimiento implements Bean, Serializable {
 
     @Override
     public void findAll() {
-        vistaSeguimiento = vSeguimientoDAO.findAllOrderBy("fcRegistro DESC");
+        find();
     }
 
     @Override
     public void find() {
-
+        vistaSeguimiento = vSeguimientoDAO.findAllOrderBy("fcRegistro DESC");
     }
 
     @Override
@@ -72,7 +73,7 @@ public class BeanConsultaSeguimiento implements Bean, Serializable {
 
     public void consultar(VSeguimiento vs) {
         try {
-            consultaSeguimiento = seguimientoEstadosDAO.findByFk("WHERE t.cdSeguimiento.cdSeguimiento = " + vs.getCdSeguimiento()+" ORDER BY t.fcEstado desc");
+            consultaSeguimiento = seguimientoEstadosDAO.findByFk("WHERE t.cdSeguimiento.cdSeguimiento = " + vs.getCdSeguimiento() + " ORDER BY t.fcEstado desc");
             RequestContext.getCurrentInstance().execute("PF('consultar').show();");
         } catch (Exception e) {
             Mensajes.mensajeError(e.getLocalizedMessage());

@@ -1,5 +1,7 @@
 package com.tracing.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
@@ -31,8 +33,4 @@ public class Mensajes {
         context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info..!", "Existe un problema con la información ingresada por favor verificar"));
     }
 
-      public static void mensajeGrabar(){
-            FacesMessage context = new FacesMessage(FacesMessage.SEVERITY_INFO,"!Informacion","Registro Grabado con Exitoso");
-            RequestContext.getCurrentInstance().showMessageInDialog(context);
-        }
 }

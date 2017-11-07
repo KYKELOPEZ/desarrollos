@@ -129,7 +129,11 @@ public class BeanClientes implements Bean, Serializable {
                 Mensajes.mensajeGrabarCorrecto();
             }
         } catch (Exception e) {
-            Mensajes.mensajeError(e.getMessage());
+            String error = "ORA-00001";
+            int index = error.indexOf(e.getCause().getCause().getCause().getMessage());
+            if (index == - 1) {
+                Mensajes.mensajeError("Ya existe un cliente con el numero de cedula "+clientes.getIdentificacion()+" por favor verificar la informacion ingresada.");
+            }
             telefonosDAO.delete(telefonos);
             direccionesDAO.delete(direcciones);
             clientesDAO.delete(clientes);
@@ -324,6 +328,12 @@ public class BeanClientes implements Bean, Serializable {
     @Override
     public Boolean validate() {
         Boolean valor = true;
+        if (clientes.getIdentificacion().equals("")) {
+            if (clientesDAO.findByFk("where t.nombres = trim('" + clientes.getNombres() + "') and t.apellidos = trim('" + clientes.getApellidos() + "') and t.identificacion IS NULL").size() > 0) {
+                Mensajes.mensajeError("El cliente " + clientes.getNombres() + " " + clientes.getApellidos() + " se encuentra registrado.");
+                return false;
+            }
+        }
         return valor;
     }
 

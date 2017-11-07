@@ -49,6 +49,9 @@ public class SeguimientoEstados implements Serializable{
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "FC_RECORDATORIO")
     private Date fcRecordatorio;
+    
+    @Column(name = "DETALLE_CIERRE")
+    private String detalleCierre;
    
 
     public Long getCdSegest() {
@@ -106,4 +109,14 @@ public class SeguimientoEstados implements Serializable{
     public void setFcRecordatorio(Date fcRecordatorio) {
         this.fcRecordatorio = fcRecordatorio;
     }    
+
+    public String getDetalleCierre() {
+        return detalleCierre;
+    }
+
+    public void setDetalleCierre(String detalleCierre) {
+        this.detalleCierre = detalleCierre;
+    }
+    
+    
 }

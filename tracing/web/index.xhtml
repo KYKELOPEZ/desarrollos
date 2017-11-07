@@ -28,8 +28,31 @@
                             required="true"
                             requiredMessage="Para acceder ingrese su clave"/>
                 
-                <p:commandButton value="Iniciar Sesión" styleClass="boton" actionListener="#{beanIndex.login()}" update=":frm"/>
+                <p:commandButton value="Iniciar Sesión" styleClass="boton" actionListener="#{beanIndex.login()}" update=":frm, :form:cambiarClave"/>
             </h:panelGrid>
+            
+     
+        </h:form>
+        <h:form id="form">
+                   <p:dialog id="cambioClave"
+                      widgetVar="cambioClave"
+                      modal="true"
+                      closeOnEscape="true"
+                      showEffect="drop"
+                      resizable="false"
+                      responsive="true">
+                
+                       <h:panelGrid columns="2" id="cambiarClave">
+                    <p:outputLabel value="Usuario"/>
+                    <p:inputText value="#{beanIndex.usuarios.usuario}" disabled="true"/>
+                    <p:outputLabel value="Nueva Clave"/>
+                    <p:password id="pwNuevo" value="#{beanIndex.usuarios.clave}" match="pwConfirma" validatorMessage="error en coincidencia de claves" />
+                    <p:outputLabel value="Confirmar clave"/>
+                    <p:password id="pwConfirma" value="#{beanIndex.usuarios.clave}"/>
+                    <p:commandButton value="Grabar" icon="ui-icon-disk" actionListener="#{beanIndex.cambioClave()}" update=":frm:growl"/>
+                </h:panelGrid>
+                
+            </p:dialog>
         </h:form>
     </h:body>
 </html>
